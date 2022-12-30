@@ -16,7 +16,7 @@ const Nav = () => {
     <Disclosure as="nav" className="bg- hite">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl pt-7 pb-3 px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-5xl pt-7 pb-3 px-4 sm:px-6 lg:px-8">
             <div className="flex h-9 justify-between">
               <div className="flex">
                 {/* Menu items */}

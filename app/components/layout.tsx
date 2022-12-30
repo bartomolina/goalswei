@@ -13,7 +13,7 @@ const Layout = ({ children }: PropsWithChildren) => {
   return (
     <div className={`${montserrat.variable} font-sans min-h-full`}>
       <Nav />
-      <div className="py-10">{children}</div>
+      <div>{children}</div>
     </div>
   );
 };

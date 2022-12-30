@@ -1,24 +1,30 @@
 import Head from "next/head";
+import Image from "next/image";
+import weightsPic from "../public/weights.jpg";
 
 export default function Home() {
   return (
     <>
       <Head>
-      <title>WAGMI - Home</title>
-        <meta name="description" content="Art Blocks x B.M." />
+        <title>WAGMI - Home</title>
+        <meta name="description" content="WAGMI" />
       </Head>
-      <header>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">PLW3...</h1>
+      <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div className="px-4 py-8 sm:px-0">
+          <header className="pt-20">
+            <h1 className="text-7xl text-white">
+              <span className="inline-block bg-black p-4">Just</span>
+              <br />
+              <span className="inline-block bg-black p-4">F*cking</span>
+              <br />
+              <span className="inline-block bg-black p-4">Do</span>
+              <br />
+              <span className="inline-block bg-black p-4">It.</span>
+            </h1>
+          </header>
+          <main></main>
         </div>
-      </header>
-      <main>
-        <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-          <div className="px-4 py-8 sm:px-0">
-            Hello!!
-          </div>
-        </div>
-      </main>
+      </div>
     </>
   );
 }

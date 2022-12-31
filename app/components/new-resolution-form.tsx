@@ -27,14 +27,14 @@ const NewResolutionForm = () => {
             </div>
           </div>
           <div>
-            <label htmlFor="arbitrer" className="block text-gray-900">
-              <span className="block font-bold">Arbitrer address</span>
+            <label htmlFor="arbiter" className="block text-gray-900">
+              <span className="block font-bold">Arbiter address</span>
               <span className="block text-xs text-gray-400">You can use a ENS name too</span>
             </label>
             <div className="mt-1">
               <input
-                id="arbitrer"
-                name="arbitrer"
+                id="arbiter"
+                name="arbiter"
                 type="text"
                 required={true}
                 className="block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"

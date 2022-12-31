@@ -6,7 +6,7 @@ import ActiveLink from "./active-link";
 const navigation = [
   { name: "New goal", href: "/" },
   { name: "Your goals", href: "/goals" },
-  { name: "Register as a beneficiary", href: "/apply" },
+  { name: "Beneficiaries", href: "/beneficiaries" },
 ];
 
 const Nav = () => {

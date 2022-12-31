@@ -13,7 +13,7 @@ const NewResolutionForm = () => {
           <div>
             <label htmlFor="goal" className="block text-gray-900">
               <span className="block font-bold">Goal</span>
-              <span className="block text-xs text-gray-400">Set a goal, You're gonna make it!</span>
+              <span className="block text-xs text-gray-400">Set a goal, You&apos;re gonna make it!</span>
             </label>
             <div className="mt-1">
               <input
@@ -79,7 +79,7 @@ const NewResolutionForm = () => {
               type="submit"
               className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
-              Let's go!
+              Let&apos;s go!
             </button>
           </div>
         </form>

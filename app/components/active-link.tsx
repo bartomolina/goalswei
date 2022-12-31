@@ -28,7 +28,7 @@ const ActiveLink = ({ children, activeClassName, inactiveClassName, className, .
         setComputedClassName(newClassName);
       }
     }
-  }, [asPath, isReady, props.as, props.href, activeClassName, className, computedClassName]);
+  }, [asPath, isReady, props.as, props.href, activeClassName, inactiveClassName, className, computedClassName]);
 
   return (
     <Link className={computedClassName} {...props}>

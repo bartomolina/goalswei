@@ -4,9 +4,9 @@ import { useRouter } from "next/router";
 import ActiveLink from "./active-link";
 
 const navigation = [
-  { name: "Home", href: "/" },
-  { name: "Register as Beneficiary", href: "/apply" },
-  { name: "Dashboard", href: "/dashboard" },
+  { name: "New goal", href: "/" },
+  { name: "Your goals", href: "/goals" },
+  { name: "Register as a beneficiary", href: "/apply" },
 ];
 
 const Nav = () => {
@@ -20,7 +20,7 @@ const Nav = () => {
             <div className="flex h-9 justify-between">
               <div className="flex">
                 {/* Menu items */}
-                <div className="hidden sm:flex sm:space-x-8">
+                <div className="hidden sm:flex sm:space-x-12">
                   {navigation.map((item) => (
                     <ActiveLink
                       key={item.href}

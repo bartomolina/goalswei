@@ -1,16 +1,19 @@
+import { FormEvent } from "react";
+
 const NewResolutionForm = () => {
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    alert("Message sent");
+  };
+
   return (
     <div className="max-w-lg">
       <div className="bg-white p-8 shadow rounded-lg">
-        <form className="space-y-6" action="#" method="POST">
+        <form className="space-y-7" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="goal" className="block text-gray-900">
-              <span className="block font-bold">
-                Goal
-              </span>
-              <span className="block text-sm text-gray-500">
-                Set your goal, You're gonna make it!
-              </span>
+              <span className="block font-bold">Goal</span>
+              <span className="block text-xs text-gray-400">Set a goal, You're gonna make it!</span>
             </label>
             <div className="mt-1">
               <input
@@ -24,8 +27,9 @@ const NewResolutionForm = () => {
             </div>
           </div>
           <div>
-            <label htmlFor="arbitrer" className="block text-sm text-gray-900">
-            Arbitrer Address
+            <label htmlFor="arbitrer" className="block text-gray-900">
+              <span className="block font-bold">Arbitrer address</span>
+              <span className="block text-xs text-gray-400">You can use a ENS name too</span>
             </label>
             <div className="mt-1">
               <input
@@ -39,8 +43,9 @@ const NewResolutionForm = () => {
             </div>
           </div>
           <div>
-            <label htmlFor="beneficiary" className="block text-sm text-gray-900">
-            Beneficiary Address
+            <label htmlFor="beneficiary" className="block text-gray-900">
+              <span className="block font-bold">Beneficiary address</span>
+              <span className="block text-xs text-gray-400">You can use a ENS name too</span>
             </label>
             <div className="mt-1">
               <input
@@ -54,8 +59,9 @@ const NewResolutionForm = () => {
             </div>
           </div>
           <div>
-            <label htmlFor="depositAmount" className="block text-sm text-gray-900">
-            Deposit amount (in ETH)
+            <label htmlFor="depositAmount" className="block text-gray-900">
+              <span className="block font-bold">Deposit amount</span>
+              <span className="block text-xs text-gray-400">Set it in ETH</span>
             </label>
             <div className="mt-1">
               <input
@@ -67,6 +73,14 @@ const NewResolutionForm = () => {
                 placeholder="0.01"
               ></input>
             </div>
+          </div>
+          <div>
+            <button
+              type="submit"
+              className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Let's go!
+            </button>
           </div>
         </form>
       </div>

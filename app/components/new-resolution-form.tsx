@@ -1,18 +1,21 @@
 import { FormEvent, useState } from "react";
-import { useAccount, useConnect } from "wagmi";
+import { useAccount, useConnect, useDisconnect, useNetwork } from "wagmi";
+import { InjectedConnector } from "wagmi/connectors/injected";
 
 const NewResolutionForm = () => {
-  const [addr, setAddr] = useState("");
-  const { address, connector: activeConnector, isConnected } = useAccount();
-  const { connect, connectors, error, isLoading, pendingConnector } = useConnect();
+  const { address, connector, isConnected } = useAccount();
+  const { connect, connectors, error, isLoading, pendingConnector } = useConnect({
+    connector: new InjectedConnector(),
+  });
+  const { disconnect } = useDisconnect();
+  const { chain } = useNetwork();
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    connect();
-    setAddr(address);
+    console.log("Connected: ", isConnected);
+    console.log("Supported: ", chain?.unsupported);
+    isConnected ? disconnect() : connect();
   };
-
-  console.log(typeof(address));
 
   return (
     <div className="max-w-lg">
@@ -25,7 +28,14 @@ const NewResolutionForm = () => {
             >
               Let&apos;s go!
             </button>
-            <div>{addr ? addr : ""}</div>
+            <div>Address: </div>
+            <span>
+              { isConnected ? address : "None" }
+            </span>
+            <div>Chain: </div>
+            <span>
+              { isConnected ? chain?.unsupported : "None" }
+            </span>
           </div>
           <div>
             <label htmlFor="goal" className="block text-gray-900">

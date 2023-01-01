@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
-import Nav from "./nav";
 import { Montserrat } from "@next/font/google";
+import Nav from "./nav";
 
 const montserrat = Montserrat({
   weight: ["400"],

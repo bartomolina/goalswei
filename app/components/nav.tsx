@@ -1,6 +1,6 @@
+import { useRouter } from "next/router";
 import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { useRouter } from "next/router";
 import ActiveLink from "./active-link";
 
 const navigation = [

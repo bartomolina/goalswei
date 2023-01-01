@@ -1,11 +1,20 @@
+// @ts-nocheck
 import { FormEvent, useState } from "react";
-import { useAccount, useConnect, useDisconnect, useNetwork } from "wagmi";
+import { useAccount, useConnect, useContractWrite, useDisconnect, useNetwork } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
+import { usePrepareContractWrite } from "wagmi";
 import ContractJSON from "../lib/contract.json";
 
 const NewResolutionForm = () => {
   const { address, connector, isConnected } = useAccount();
-  const { connect, connectors, error, isLoading, pendingConnector } = useConnect({
+  const { config, error } = usePrepareContractWrite({
+    address: ContractJSON.address,
+    abi: ContractJSON.abi,
+    functionName: "createEscrow",
+    args: [address, address],
+  });
+  const { write } = useContractWrite(config);
+  const { connect, connectors, error: connectionError, isLoading, pendingConnector } = useConnect({
     connector: new InjectedConnector(),
   });
   const { disconnect } = useDisconnect();
@@ -20,24 +29,21 @@ const NewResolutionForm = () => {
 
   return (
     <div className="max-w-lg">
+      <button
+        onClick={handleSubmit}
+        className="rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Connect / Disconnect
+      </button>
+      <button
+        onClick={handleSubmit}
+        className="rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Connect / Disconnect
+      </button>
+
       <div className="bg-white p-8 shadow rounded-lg">
         <form className="space-y-7" onSubmit={handleSubmit}>
-          <div>
-            <button
-              type="submit"
-              className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-            >
-              Let&apos;s go!
-            </button>
-            <div>Address: </div>
-            <span>
-              { isConnected ? address : "None" }
-            </span>
-            <div>Chain: </div>
-            <span>
-              { isConnected ? chain?.unsupported : "None" }
-            </span>
-          </div>
           <div>
             <label htmlFor="goal" className="block text-gray-900">
               <span className="block font-bold">Goal</span>
@@ -97,6 +103,14 @@ const NewResolutionForm = () => {
                 placeholder="0.01"
               ></input>
             </div>
+          </div>
+          <div>
+            <button
+              type="submit"
+              className="flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              Let&apos;s go!
+            </button>
           </div>
         </form>
       </div>

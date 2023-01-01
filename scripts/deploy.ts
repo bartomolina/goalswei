@@ -8,14 +8,10 @@ async function main() {
   await escrowFactory.deployed();
 
   console.log(`EscrowFactory deployed to ${escrowFactory.address}`);
-  let abi = escrowFactory.interface.format("json");
-  if (typeof abi != "string") {
-    abi = abi[0];
-  }
 
   const data = {
     address: escrowFactory.address,
-    abi,
+    abi: escrowFactory.interface.format("json"),
   };
 
   fs.writeFileSync("./app/lib/contract.json", JSON.stringify(data));

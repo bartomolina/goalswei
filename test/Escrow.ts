@@ -1,5 +1,4 @@
-import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
+import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
@@ -8,8 +7,18 @@ describe("Escrow", function () {
     const [owner, beneficiary, arbiter] = await ethers.getSigners();
     const deposit = ethers.utils.parseEther("1");
 
+    // Deploy proxy contract and create a new Escrow contract instance
+    const EscrowFactory = await ethers.getContractFactory("EscrowFactory");
+    const escrowFactory = await EscrowFactory.deploy();
+    const createEscrowTx = await escrowFactory.createEscrow(arbiter.getAddress(), beneficiary.getAddress(), {
+      value: deposit,
+    });
+    const txReceipt = await createEscrowTx.wait();
+    const instanceAddress = await txReceipt.events[1].args._instance;
+
+    // Return the new Escrow instance
     const Escrow = await ethers.getContractFactory("Escrow");
-    const escrow = await Escrow.deploy(arbiter.getAddress(), beneficiary.getAddress(), { value: deposit });
+    const escrow = Escrow.attach(instanceAddress);
 
     return { owner, beneficiary, arbiter, escrow, deposit };
   }

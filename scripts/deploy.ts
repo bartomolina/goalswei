@@ -1,22 +1,26 @@
-import { ethers } from "hardhat";
+import { ethers, artifacts } from "hardhat";
+const fs = require("fs");
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-  const unlockTime = currentTimestampInSeconds + ONE_YEAR_IN_SECS;
+  const EscrowFactory = await ethers.getContractFactory("EscrowFactory");
+  const escrowFactory = await EscrowFactory.deploy();
 
-  const lockedAmount = ethers.utils.parseEther("1");
+  await escrowFactory.deployed();
 
-  const Lock = await ethers.getContractFactory("Lock");
-  const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
+  console.log(`EscrowFactory deployed to ${escrowFactory.address}`);
+  let abi = escrowFactory.interface.format("json");
+  if (typeof abi != "string") {
+    abi = abi[0];
+  }
 
-  await lock.deployed();
+  const data = {
+    address: escrowFactory.address,
+    abi,
+  };
 
-  console.log(`Lock with 1 ETH and unlock timestamp ${unlockTime} deployed to ${lock.address}`);
+  fs.writeFileSync("./app/lib/contract.json", JSON.stringify(data));
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
 main().catch((error) => {
   console.error(error);
   process.exitCode = 1;

@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import { useAccount, useConnect, useDisconnect, useNetwork } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
+import ContractJSON from "../lib/contract.json";
 
 const NewResolutionForm = () => {
   const { address, connector, isConnected } = useAccount();

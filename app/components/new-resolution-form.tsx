@@ -130,7 +130,7 @@ const NewResolutionForm = ({refetch}) => {
               ></input>
             </div>
           </div>
-          <div className="space-x-2">
+          <div className="space-x-3">
             <button
               type="submit"
               disabled={isLoading}

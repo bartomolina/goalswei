@@ -1,19 +1,28 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
+import Hero from "../components/hero";
 import NewResolutionForm from "../components/new-resolution-form";
+import GoalsGrid from "../components/goals-grid";
 import { useContractRead } from "wagmi";
 import ContractJSON from "../lib/contract.json";
 
 const Home = () => {
+  const [hasMounted, setHasMounted] = useState(false);
   const { data, refetch } = useContractRead({
     address: ContractJSON.address,
     abi: ContractJSON.abi,
     functionName: "getInstances",
   });
 
+  // To prevent hydration errors:
+  // https://codingwithmanny.medium.com/understanding-hydration-errors-in-nextjs-13-with-a-web3-wallet-connection-8155c340fbd5
+  // https://www.joshwcomeau.com/react/the-perils-of-rehydration/#the-solution
   useEffect(() => {
-    console.log(data);
-  }, [data])
+    if (!hasMounted) {
+      setHasMounted(true);
+    }
+  }, [hasMounted]);
+  if (!hasMounted) return null;
 
   return (
     <>
@@ -21,25 +30,16 @@ const Home = () => {
         <title>WAGMI - Home</title>
         <meta name="description" content="WAGMI" />
       </Head>
-      <div className="mx-auto max-w-5xl sm:px-6 lg:px-8">
-        <div className="px-4 py-3 md:py-8 sm:px-0 md:grid md:grid-cols-2 gap-10">
-          <header className="content-center md:pt-8 mb-5 md:mb-0">
-            <div className="space-y-2">
-              <span className="block text-4xl font-semibold ">Achieve your goals</span>
-              <span className="block text-4xl font-semibold ">Support awesome devs</span>
-              <p className="text-gray-500 pt-5">
-                Put your ETH where your mouth is! This year, set your new year&apos;s resolutions the Web3 way. Set a
-                goal, a target date and the address of an arbitrer.
-              </p>
-              <p className="text-gray-500 pt-2">
-                Once the date is reached, the arbitrer will determine if the goal was achieved and will either return
-                the stacked amount to you or send it to the beneficiary.
-              </p>
-            </div>
-          </header>
-          <main>
-            <NewResolutionForm refetch={refetch} />
-          </main>
+      <div className="bg-gray-100">
+        <div className="mx-auto max-w-5xl sm:px-6 lg:px-8">
+          <div className="px-4 py-4 md:pt-8 sm:px-0 md:grid md:grid-cols-2 gap-10">
+            <header className="content-center md:pt-8 mb-5 md:mb-0">
+              <Hero />
+            </header>
+            <main>
+              <NewResolutionForm refetch={refetch} />
+            </main>
+          </div>
         </div>
       </div>
       <div style={{ bottom: "0px", transform: "rotate(180deg)" }}>
@@ -47,6 +47,7 @@ const Home = () => {
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1200 120"
           preserveAspectRatio="none"
+          className="fill-current bg-gray-100"
           style={{ width: "calc(100% + 1.3px)", height: "70px" }}
         >
           <path
@@ -55,7 +56,7 @@ const Home = () => {
           ></path>
         </svg>
       </div>
-      <div className="bg-white"></div>
+      <GoalsGrid goals={data} />
     </>
   );
 };

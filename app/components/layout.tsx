@@ -9,9 +9,9 @@ const montserrat = Montserrat({
 });
 
 const Layout = ({ children }: PropsWithChildren) => (
-  <div className={`${montserrat.variable} font-sans min-h-full className="bg-gray-100`}>
+  <div className={`${montserrat.variable} font-sans min-h-full`}>
     <Nav />
-    <div className="bg-gray-100">{children}</div>
+    <div>{children}</div>
   </div>
 );
 

@@ -14,6 +14,7 @@ import "./Escrow.sol";
 
 contract EscrowFactory is Ownable {
     address escrowAddress;
+    address[] public escrowInstances;
 
     event NewInstance(address indexed _instance);
 
@@ -22,11 +23,17 @@ contract EscrowFactory is Ownable {
     }
 
     function createEscrow(
+        string calldata _goal,
         address _arbiter,
         address _beneficiary
     ) public payable returns (address clone) {
         clone = Clones.clone(escrowAddress);
-        Escrow(clone).initialize{value: msg.value}(_arbiter, _beneficiary);
+        escrowInstances.push(clone);
+        Escrow(clone).initialize{value: msg.value}(_goal, _arbiter, _beneficiary);
         emit NewInstance(clone);
+    }
+
+    function getInstances() external view returns(address[] memory) {
+        return escrowInstances;
     }
 }

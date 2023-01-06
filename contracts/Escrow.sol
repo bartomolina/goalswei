@@ -11,6 +11,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 // |_.__/ \__,_|_|   \__\___/|_| |_| |_|\___/|_|_|_| |_|\__,_(_)___|\__|_| |_|
 
 contract Escrow is Initializable {
+    string public goal;
     address public arbiter;
     address public beneficiary;
     address public depositor;
@@ -20,9 +21,11 @@ contract Escrow is Initializable {
     constructor() initializer {}
 
     function initialize(
+        string calldata _goal,
         address _arbiter,
         address _beneficiary
     ) public payable initializer {
+        goal = _goal;
         arbiter = _arbiter;
         beneficiary = _beneficiary;
         depositor = msg.sender;

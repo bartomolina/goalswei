@@ -56,7 +56,7 @@ const Nav = () => {
               {navigation.map((item) => (
                 <ActiveLink
                   key={item.href}
-                  activeClassName="bg-indigo-50 text-indigo-700 border-indigo-500"
+                  activeClassName="text-indigo-700 border-indigo-500"
                   inactiveClassName="hover:bg-gray-50 text-gray-500 hover:text-gray-700 border-transparent hover:border-gray-300"
                   className="block pl-3 py-2 border-l-4 font-semibold"
                   href={item.href}

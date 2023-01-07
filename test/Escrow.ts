@@ -5,12 +5,13 @@ import { ethers } from "hardhat";
 describe("Escrow", function () {
   async function deployEscrowFixture() {
     const [owner, beneficiary, arbiter] = await ethers.getSigners();
+    const goal = "Test goal";
     const deposit = ethers.utils.parseEther("1");
 
     // Deploy proxy contract and create a new Escrow contract instance
     const EscrowFactory = await ethers.getContractFactory("EscrowFactory");
     const escrowFactory = await EscrowFactory.deploy();
-    const createEscrowTx = await escrowFactory.createEscrow(arbiter.getAddress(), beneficiary.getAddress(), {
+    const createEscrowTx = await escrowFactory.createEscrow(goal, arbiter.getAddress(), beneficiary.getAddress(), {
       value: deposit,
     });
     const txReceipt = await createEscrowTx.wait();

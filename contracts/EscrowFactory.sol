@@ -20,6 +20,7 @@ contract EscrowFactory is Ownable {
         address arbiter;
         address beneficiary;
         address depositor;
+        uint256 value;
     }
     EscrowStruct[] public escrowInstances;
 
@@ -36,7 +37,7 @@ contract EscrowFactory is Ownable {
     ) public payable returns (address clone) {
         clone = Clones.clone(escrowAddress);
 
-        EscrowStruct memory newEscrow = EscrowStruct(clone, _goal, _arbiter, _beneficiary, msg.sender);
+        EscrowStruct memory newEscrow = EscrowStruct(clone, _goal, _arbiter, _beneficiary, msg.sender, msg.value);
         escrowInstances.push(newEscrow);
         Escrow(clone).initialize{value: msg.value}(_goal, _arbiter, _beneficiary);
         emit NewInstance(clone);

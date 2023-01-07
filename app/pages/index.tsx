@@ -56,7 +56,9 @@ const Home = () => {
           ></path>
         </svg>
       </div>
-      <GoalsGrid goals={data} />
+      <div className="mx-auto max-w-5xl px-6 lg:px-8 my-8">
+        <GoalsGrid goals={data} />
+      </div>
     </>
   );
 };

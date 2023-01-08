@@ -2,6 +2,8 @@ import { useRouter } from "next/router";
 import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import ActiveLink from "./active-link";
+// import CustomConnectButton from "./custom-connect-button";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const navigation = [
   { name: "New goal", href: "/" },
@@ -33,6 +35,11 @@ const Nav = () => {
                     </ActiveLink>
                   ))}
                 </div>
+              </div>
+              {/* Right menu items */}
+              <div className="hidden sm:ml-6 sm:flex sm:items-center">
+                <ConnectButton />
+                {/* <CustomConnectButton /> */}
               </div>
               {/* Mobile menu button */}
               <div className="flex items-center sm:hidden">

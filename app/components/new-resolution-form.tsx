@@ -22,12 +22,13 @@ const NewResolutionForm = ({ refetch }) => {
     goal: "Test",
     arbiter: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
     beneficiary: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
-    depositAmount: ethers.utils.parseEther("0.00001"),
+    depositAmount: ethers.utils.parseEther("0.01"),
     dueDate: tomorrow.getTime(),
   });
-  const { connect, isLoading } = useConnect({
-    connector: new InjectedConnector(),
-  });
+  // const { connect, isLoading } = useConnect({
+  //   connector: new InjectedConnector(),
+  // });
+  const { connect, isLoading } = useConnect();
   const { disconnect } = useDisconnect();
   const { address, connector, isConnected } = useAccount();
   const { config, error } = usePrepareContractWrite({
@@ -59,17 +60,24 @@ const NewResolutionForm = ({ refetch }) => {
   };
 
   const handleFormChange = (event: FormEvent) => {
-    if (typeof event.currentTarget === "undefined") {
-      setFormData({
-        ...formData,
-        dueDate: event.getTime(),
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [event.currentTarget.id]: event.currentTarget.value,
-      });
-    }
+    setFormData({
+      ...formData,
+      [event.currentTarget.id]: event.currentTarget.value,
+    });
+  };
+
+  const handleDateChange = (event: FormEvent) => {
+    setFormData({
+      ...formData,
+      dueDate: event.getTime(),
+    });
+  };
+
+  const handleETHChange = (event: FormEvent) => {
+    setFormData({
+      ...formData,
+      [event.currentTarget.id]: ethers.utils.parseEther(event.currentTarget.value),
+    });
   };
 
   // To prevent hydration errors:
@@ -86,7 +94,7 @@ const NewResolutionForm = ({ refetch }) => {
     <div className="text-sm">
       <div className="bg-white p-8 shadow rounded-lg md:rounded-2xl">
         <form className="space-y-7" onSubmit={handleSubmit}>
-          <div className="relative rounded-md border border-gray-300 p-3 shadow-sm focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
+          <div className="relative rounded-md border border-gray-700 p-3 shadow-md focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
             <label
               htmlFor="goal"
               className="absolute -top-2 left-2 -mt-px inline-block bg-white px-1 text-xs text-gray-800"
@@ -99,11 +107,11 @@ const NewResolutionForm = ({ refetch }) => {
               id="goal"
               value={formData.goal}
               onChange={handleFormChange}
-              className="block w-full border-0 p-0 text-gray-700 placeholder-gray-300 focus:ring-0"
+              className="text-xl block w-full border-0 p-0 text-gray-700 placeholder-gray-300 focus:ring-0"
               placeholder="Run a marathon"
             />
           </div>
-          <div className="relative rounded-md border border-gray-300 px-3 py-2 shadow-sm focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
+          <div className="relative rounded-md border border-gray-300 p-3 shadow-sm focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
             <label
               htmlFor="arbiter"
               className="absolute -top-2 left-2 -mt-px inline-block bg-white px-1 text-xs text-gray-800"
@@ -120,7 +128,7 @@ const NewResolutionForm = ({ refetch }) => {
               placeholder="PLW3.eth"
             />
           </div>
-          <div className="relative rounded-md border border-gray-300 px-3 py-2 shadow-sm focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
+          <div className="relative rounded-md border border-gray-300 p-3 shadow-sm focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
             <label
               htmlFor="beneficiary"
               className="absolute -top-2 left-2 -mt-px inline-block bg-white px-1 text-xs text-gray-800"
@@ -137,31 +145,42 @@ const NewResolutionForm = ({ refetch }) => {
               placeholder="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
             />
           </div>
-          <div>
-            <label htmlFor="dueDate" className="block text-gray-800">
-              <span className="block">Due date</span>
-            </label>
-            <DatePicker
-              id="dueDate"
-              selected={formData.dueDate}
-              minDate={tomorrow}
-              onChange={handleFormChange}
-              className="mt-1 text-base block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="depositAmount" className="block text-gray-800">
-              <span className="block">Deposit amount (Wei)</span>
-            </label>
-            <input
-              id="depositAmount"
-              name="depositAmount"
-              type="text"
-              value={formData.depositAmount}
-              onChange={handleFormChange}
-              className="mt-1 text-base block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
-              placeholder="0.01"
-            />
+          <div className="grid grid-cols-2 gap-3">
+            <div className="relative rounded-md border border-gray-300 p-3 shadow-sm focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
+              <label
+                htmlFor="dueDate"
+                className="absolute -top-2 left-2 -mt-px inline-block bg-white px-1 text-xs text-gray-800"
+              >
+                Due date
+              </label>
+              <DatePicker
+                type="text"
+                name="dueDate"
+                id="dueDate"
+                selected={formData.dueDate}
+                minDate={tomorrow}
+                onChange={handleDateChange}
+                className="text-sm block w-full border-0 p-0 text-gray-700 placeholder-gray-300 focus:ring-0"
+              />
+            </div>
+            <div className="relative rounded-md border border-gray-300 p-3 shadow-sm focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
+              <label
+                htmlFor="depositAmount"
+                className="absolute -top-2 left-2 -mt-px inline-block bg-white px-1 text-xs text-gray-800"
+              >
+                Amount (ETH)
+              </label>
+              <input
+                type="number"
+                name="depositAmount"
+                id="depositAmount"
+                value={ethers.utils.formatEther(formData.depositAmount)}
+                step="0.01"
+                onChange={handleETHChange}
+                className="text-sm block w-full border-0 p-0 text-gray-700 placeholder-gray-300 focus:ring-0"
+                placeholder="0.01"
+              />
+            </div>
           </div>
           <div className="space-x-3">
             <button

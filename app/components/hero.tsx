@@ -1,7 +1,7 @@
 const Hero = () => (
   <div className="space-y-2">
-    <span className="block text-4xl font-semibold ">Achieve your goals</span>
-    <span className="block text-4xl font-semibold ">Support awesome devs</span>
+    <span className="text-gray-800 block lg:text-5xl md:text-4xl text-3xl font-bold">Achieve your goals</span>
+    <span className="text-indigo-900 block lg:text-4xl md:text-3xl text-2xl font-semibold">Support awesome devs</span>
     <p className="text-gray-500 pt-5">
       Put your ETH where your mouth is! Set your new year&apos;s resolutions the Web3 way. Choose a goal, a
       target date and the address of an arbitrer.

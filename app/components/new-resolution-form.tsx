@@ -13,6 +13,9 @@ import { usePrepareContractWrite } from "wagmi";
 import { ethers } from "ethers";
 import ContractJSON from "../lib/contract.json";
 
+const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+
 const NewResolutionForm = ({ refetch }) => {
   const [hasMounted, setHasMounted] = useState(false);
   const [formData, setFormData] = useState({
@@ -20,7 +23,7 @@ const NewResolutionForm = ({ refetch }) => {
     arbiter: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
     beneficiary: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
     depositAmount: ethers.utils.parseEther("0.00001"),
-    dueDate: Date.now(),
+    dueDate: tomorrow.getTime(),
   });
   const { connect, isLoading } = useConnect({
     connector: new InjectedConnector(),
@@ -31,7 +34,7 @@ const NewResolutionForm = ({ refetch }) => {
     address: ContractJSON.address,
     abi: ContractJSON.abi,
     functionName: "createEscrow",
-    args: [formData.goal, formData.arbiter, formData.beneficiary, formData.dueDate],
+    args: [formData.goal, formData.arbiter, formData.beneficiary, Math.floor(formData.dueDate / 1000)],
     overrides: {
       value: formData.depositAmount,
     },
@@ -83,61 +86,71 @@ const NewResolutionForm = ({ refetch }) => {
     <div className="text-sm">
       <div className="bg-white p-8 shadow rounded-lg md:rounded-2xl">
         <form className="space-y-7" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="goal" className="block text-gray-900">
-              <span className="block">Goal</span>
+          <div className="relative rounded-md border border-gray-300 p-3 shadow-sm focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
+            <label
+              htmlFor="goal"
+              className="absolute -top-2 left-2 -mt-px inline-block bg-white px-1 text-xs text-gray-800"
+            >
+              Goal
             </label>
             <input
-              id="goal"
-              name="goal"
               type="text"
+              name="goal"
+              id="goal"
               value={formData.goal}
               onChange={handleFormChange}
-              className="mt-1 text-base block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+              className="block w-full border-0 p-0 text-gray-700 placeholder-gray-300 focus:ring-0"
               placeholder="Run a marathon"
             />
           </div>
-          <div>
-            <label htmlFor="arbiter" className="block text-gray-900">
-              <span className="block">Arbiter address / ENS</span>
+          <div className="relative rounded-md border border-gray-300 px-3 py-2 shadow-sm focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
+            <label
+              htmlFor="arbiter"
+              className="absolute -top-2 left-2 -mt-px inline-block bg-white px-1 text-xs text-gray-800"
+            >
+              Arbiter address / ENS
             </label>
             <input
-              id="arbiter"
-              name="arbiter"
               type="text"
+              name="arbiter"
+              id="arbiter"
               value={formData.arbiter}
               onChange={handleFormChange}
-              className="mt-1 text-base block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+              className="text-sm block w-full border-0 p-0 text-gray-700 placeholder-gray-300 focus:ring-0"
               placeholder="PLW3.eth"
             />
           </div>
-          <div>
-            <label htmlFor="beneficiary" className="block text-gray-900">
-              <span className="block">Beneficiary address / ENS</span>
+          <div className="relative rounded-md border border-gray-300 px-3 py-2 shadow-sm focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
+            <label
+              htmlFor="beneficiary"
+              className="absolute -top-2 left-2 -mt-px inline-block bg-white px-1 text-xs text-gray-800"
+            >
+              Beneficiary address / ENS
             </label>
             <input
-              id="beneficiary"
-              name="beneficiary"
               type="text"
+              name="beneficiary"
+              id="beneficiary"
               value={formData.beneficiary}
               onChange={handleFormChange}
-              className="mt-1 text-base block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+              className="text-sm block w-full border-0 p-0 text-gray-700 placeholder-gray-300 focus:ring-0"
               placeholder="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
             />
           </div>
           <div>
-            <label htmlFor="dueDate" className="block text-gray-900">
+            <label htmlFor="dueDate" className="block text-gray-800">
               <span className="block">Due date</span>
             </label>
             <DatePicker
               id="dueDate"
               selected={formData.dueDate}
+              minDate={tomorrow}
               onChange={handleFormChange}
               className="mt-1 text-base block w-full rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
             />
           </div>
           <div>
-            <label htmlFor="depositAmount" className="block text-gray-900">
+            <label htmlFor="depositAmount" className="block text-gray-800">
               <span className="block">Deposit amount (Wei)</span>
             </label>
             <input

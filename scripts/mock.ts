@@ -9,13 +9,14 @@ const goals = [
   "Eat healthy",
   "Get a lambo",
   "Participate in a hackathon",
-  "Learn p5.js and generative art",
+  "Research p5.js and generative art",
   "Travel the world",
   "Weekly post on lens",
-]
+];
+const unlockTime = Math.floor(new Date("2023-02-07").getTime() / 1000);
 
-async function createGoal(factory, goal, arbiter, beneficiary, depositor, value) {
-  const createEscrowTx = await factory.connect(depositor).createEscrow(goal, arbiter, beneficiary, {
+async function createGoal(factory, goal, arbiter, beneficiary, unlockTime, depositor, value) {
+  const createEscrowTx = await factory.connect(depositor).createEscrow(goal, arbiter, beneficiary, unlockTime, {
     value,
   });
 }
@@ -24,7 +25,7 @@ async function main() {
   const escrowFactory = await ethers.getContractAt("EscrowFactory", escrowFactoryAddress);
 
   signers.slice(1, 11).map((signer, i) => {
-    createGoal(escrowFactory, goals[i], signers[0].address, signers[i+1].address, signers[i], ethers.utils.parseEther("0.1"));
+    createGoal(escrowFactory, goals[i], signers[0].address, signers[i+1].address, unlockTime, signers[i], ethers.utils.parseEther("0.1"));
   });
 }
 

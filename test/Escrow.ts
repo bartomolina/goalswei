@@ -1,4 +1,4 @@
-import { loadFixture } from "@nomicfoundation/hardhat-network-helpers";
+import { loadFixture, time } from "@nomicfoundation/hardhat-network-helpers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
@@ -6,12 +6,13 @@ describe("Escrow", function () {
   async function deployEscrowFixture() {
     const [owner, beneficiary, arbiter] = await ethers.getSigners();
     const goal = "Test goal";
+    const unlockTime = Math.floor(new Date("2023-02-07").getTime() / 1000);
     const deposit = ethers.utils.parseEther("1");
 
     // Deploy proxy contract and create a new Escrow contract instance
     const EscrowFactory = await ethers.getContractFactory("EscrowFactory");
     const escrowFactory = await EscrowFactory.deploy();
-    const createEscrowTx = await escrowFactory.createEscrow(goal, arbiter.getAddress(), beneficiary.getAddress(), {
+    const createEscrowTx = await escrowFactory.createEscrow(goal, arbiter.getAddress(), beneficiary.getAddress(), unlockTime, {
       value: deposit,
     });
     const txReceipt = await createEscrowTx.wait();
@@ -21,7 +22,7 @@ describe("Escrow", function () {
     const Escrow = await ethers.getContractFactory("Escrow");
     const escrow = Escrow.attach(instanceAddress);
 
-    return { owner, beneficiary, arbiter, escrow, deposit };
+    return { owner, beneficiary, arbiter, escrow, deposit, unlockTime };
   }
 
   describe("Deployment", function () {
@@ -42,7 +43,9 @@ describe("Escrow", function () {
 
   describe("After approval from the arbiter", function () {
     it("Should transfer balance to beneficiary", async function () {
-      const { escrow, arbiter, beneficiary, deposit } = await loadFixture(deployEscrowFixture);
+      // Increase hardhat time to unlockTime
+      const { escrow, arbiter, beneficiary, deposit, unlockTime } = await loadFixture(deployEscrowFixture);
+      await time.increaseTo(unlockTime);
 
       const before = await ethers.provider.getBalance(beneficiary.getAddress());
       const approveTxn = await escrow.connect(arbiter).approve();

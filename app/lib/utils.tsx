@@ -9,4 +9,26 @@ const truncateEthAddress = (address: string, half?: "first" | "second") => {
   }
 };
 
-export { truncateEthAddress };
+const units: { unit: Intl.RelativeTimeFormatUnit; secondsInUnit: number }[] = [
+  { unit: "year", secondsInUnit: 31536000 },
+  { unit: "month", secondsInUnit: 2628000 },
+  { unit: "day", secondsInUnit: 86400 },
+  { unit: "hour", secondsInUnit: 3600 },
+  { unit: "minute", secondsInUnit: 60 },
+  { unit: "second", secondsInUnit: 1 },
+];
+
+const getTimeRemaining = (timestamp: number) => {
+  const rtf = new Intl.RelativeTimeFormat();
+  const secondsRemaining = timestamp - Date.now() / 1000;
+
+  for (const { unit, secondsInUnit } of units) {
+    if (secondsRemaining >= secondsInUnit || unit === "second") {
+      return rtf.format(Math.floor(secondsRemaining / secondsInUnit), unit);
+    }
+  }
+
+  return "";
+};
+
+export { truncateEthAddress, getTimeRemaining };

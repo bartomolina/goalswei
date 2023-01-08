@@ -19,6 +19,7 @@ contract EscrowFactory is Ownable {
         string goal;
         address arbiter;
         address beneficiary;
+        uint256 unlockTime;
         address depositor;
         uint256 value;
     }
@@ -33,13 +34,14 @@ contract EscrowFactory is Ownable {
     function createEscrow(
         string calldata _goal,
         address _arbiter,
-        address _beneficiary
+        address _beneficiary,
+        uint256 _unlockTime
     ) public payable returns (address clone) {
         clone = Clones.clone(escrowAddress);
 
-        EscrowStruct memory newEscrow = EscrowStruct(clone, _goal, _arbiter, _beneficiary, msg.sender, msg.value);
+        EscrowStruct memory newEscrow = EscrowStruct(clone, _goal, _arbiter, _beneficiary, _unlockTime, msg.sender, msg.value);
         escrowInstances.push(newEscrow);
-        Escrow(clone).initialize{value: msg.value}(_goal, _arbiter, _beneficiary);
+        Escrow(clone).initialize{value: msg.value}(_goal, _arbiter, _beneficiary, _unlockTime);
         emit NewInstance(clone);
     }
 

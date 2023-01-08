@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
+import { useContractRead } from "wagmi";
 import Hero from "../components/hero";
 import NewResolutionForm from "../components/new-resolution-form";
 import GoalsGrid from "../components/goals-grid";
-import { useContractRead } from "wagmi";
 import ContractJSON from "../lib/contract.json";
 
 const Home = () => {

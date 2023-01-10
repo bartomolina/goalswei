@@ -11,7 +11,7 @@ tomorrow.setDate(tomorrow.getDate() + 1);
 
 const NewResolutionForm = () => {
   const [hasMounted, setHasMounted] = useState(false);
-  const { goals, refetch } = useGoals();
+  const { fetchGoals } = useGoals();
   const [formData, setFormData] = useState({
     goal: "Test",
     arbiter: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
@@ -33,7 +33,7 @@ const NewResolutionForm = () => {
     ...config,
     onSuccess(data) {
       console.log("Goal created: ", data);
-      refetch();
+      fetchGoals();
     },
   });
 

@@ -7,7 +7,6 @@ import { useGoals } from "../components/goals-context";
 
 const Home = () => {
   const [hasMounted, setHasMounted] = useState(false);
-  const { goals, refetch } = useGoals();
 
   // To prevent hydration errors:
   // https://codingwithmanny.medium.com/understanding-hydration-errors-in-nextjs-13-with-a-web3-wallet-connection-8155c340fbd5
@@ -51,8 +50,8 @@ const Home = () => {
           ></path>
         </svg>
       </div>
-      <div className="mx-auto max-w-5xl px-6 lg:px-8 my-8">
-        <GoalsGrid goals={goals?.slice().sort((a, b) => a.unlockTime - b.unlockTime)} />
+      <div className="mx-auto max-w-5xl px-6 lg:px-8 mt-8 mb-24">
+        <GoalsGrid />
       </div>
     </>
   );

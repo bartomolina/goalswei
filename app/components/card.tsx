@@ -14,7 +14,7 @@ const Card = ({ goal }) => {
   }
 
   return (
-    <div className="divide-y w-full">
+    <div className="bg-white divide-y w-full">
       <div className="flex pt-5 px-5 mb-3">
         <div className="flex-none">
           <img className="h-14 w-14 rounded-xl" src={makeBlockie(goal.depositor)} alt="" />

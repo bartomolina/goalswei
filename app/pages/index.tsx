@@ -3,7 +3,6 @@ import Head from "next/head";
 import Hero from "../components/hero";
 import NewResolutionForm from "../components/new-resolution-form";
 import GoalsGrid from "../components/goals-grid";
-import { useGoals } from "../components/goals-context";
 
 const Home = () => {
   const [hasMounted, setHasMounted] = useState(false);

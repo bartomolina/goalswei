@@ -32,14 +32,12 @@ const NewResolutionForm = () => {
   const { write } = useContractWrite({
     ...config,
     onSuccess(data) {
-      console.log("Goal created: ", data);
       fetchGoals();
     },
   });
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
-    console.log(formData);
     if (write) {
       write();
     }

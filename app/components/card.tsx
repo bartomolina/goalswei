@@ -18,6 +18,16 @@ const Card = ({ goal }) => {
     unlocked = true;
   }
 
+  const handleApproveGoal = (event: FormEvent) => {
+    event.preventDefault();
+    alert("Approved");
+  }
+
+  const handleRejectGoal = (event: FormEvent) => {
+    event.preventDefault();
+    alert("Rejected");
+  }
+
   return (
     <div className="bg-white divide-y w-full">
       <div className="flex pt-5 px-5 mb-3">
@@ -55,12 +65,20 @@ const Card = ({ goal }) => {
         </div>
       </dl>
       {unlocked && (
-        <div className="flex justify-evenly">
+        <div className="flex justify-evenly p-3">
           <button
             type="submit"
-            className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 active:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2"
+            onClick={handleApproveGoal}
+            className="inline-flex justify-center rounded-md border border-transparent bg-green-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-400 active:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-200 focus:ring-offset-2"
           >
-            Goal completed!
+            Done 👍
+          </button>
+          <button
+            type="submit"
+            onClick={handleRejectGoal}
+            className="inline-flex justify-center rounded-md border border-transparent bg-red-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-400 active:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-200 focus:ring-offset-2"
+          >
+            Failed 👎
           </button>
         </div>
       )}

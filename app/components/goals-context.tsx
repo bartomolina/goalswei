@@ -19,18 +19,13 @@ export const GoalsProvider = ({ children }) => {
       abi: ContractJSON.abi,
       functionName: "getInstances",
     }).then((data) => {
-      console.log(data);
       setGoals(data);
     });
   };
 
   const { address, isConnecting, isDisconnected } = useAccount({
-    onConnect({ address, connector, isReconnected }) {
-      console.log("Address connected");
+    onConnect() {
       fetchGoals();
-    },
-    onDisconnect() {
-      console.log("Address disconnected");
     },
   });
 

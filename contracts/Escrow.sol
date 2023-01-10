@@ -26,10 +26,10 @@ contract Escrow is Initializable {
         address _beneficiary,
         uint256 _unlockTime
     ) public payable initializer {
-        require(
-            block.timestamp < _unlockTime,
-            "Goal due date should be in the future"
-        );
+        // require(
+        //     block.timestamp < _unlockTime,
+        //     "Goal due date should be in the future"
+        // );
         goal = _goal;
         arbiter = _arbiter;
         beneficiary = _beneficiary;

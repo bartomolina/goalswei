@@ -168,19 +168,17 @@ const NewResolutionForm = () => {
               />
             </div>
           </div>
-          <div className="space-x-3">
-            <button
-              type="submit"
-              disabled={!isConnected}
-              className={
-                isConnected
-                  ? "inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 active:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2"
-                  : "inline-flex justify-center rounded-md border border-transparent bg-indigo-200 py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2"
-              }
-            >
-              {isConnected ? "Set goal" : "Connect wallet"}
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={!isConnected}
+            className={
+              isConnected
+                ? "inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 active:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2"
+                : "inline-flex justify-center rounded-md border border-transparent bg-indigo-200 py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2"
+            }
+          >
+            {isConnected ? "Set goal" : "Connect wallet"}
+          </button>
         </form>
       </div>
     </div>

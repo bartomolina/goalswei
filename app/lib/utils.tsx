@@ -23,7 +23,7 @@ const getTimeRemaining = (timestamp: number) => {
   const secondsRemaining = timestamp - Date.now() / 1000;
 
   for (const { unit, secondsInUnit } of units) {
-    if (secondsRemaining >= secondsInUnit || unit === "second") {
+    if (Math.abs(secondsRemaining) >= secondsInUnit || unit === "second") {
       return rtf.format(Math.floor(secondsRemaining / secondsInUnit), unit);
     }
   }

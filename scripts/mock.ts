@@ -13,9 +13,6 @@ const goals = [
   "Research p5.js and generative art",
   "Travel the world",
   "Weekly post on lens",
-  // "Volunteer",
-  // "Drink more water",
-  // "Stop multitasking",
   // "Take the stairs",
   // "Start a new hobby",
 ];

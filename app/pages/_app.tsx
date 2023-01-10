@@ -1,11 +1,12 @@
 import "../styles/globals.css";
-import '@rainbow-me/rainbowkit/styles.css';
 import "../styles/react-datepicker.css";
 import Head from "next/head";
 import type { AppProps } from "next/app";
-import { WagmiConfig } from "wagmi";
-import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
-import { client, chains } from "../lib/wagmi";
+import { WagmiConfig, useAccount, useConnect, useContractRead } from "wagmi";
+import client from "../lib/wagmi";
+import { ConnectKitProvider } from "connectkit";
+
+import BlockieAvatar from "../lib/connect-button-avatar";
 import Layout from "../components/layout";
 
 const App = ({ Component, pageProps }: AppProps) => (
@@ -14,11 +15,13 @@ const App = ({ Component, pageProps }: AppProps) => (
       <meta name="viewport" content="width=device-width, initial-scale=1" />
     </Head>
     <WagmiConfig client={client}>
-      <RainbowKitProvider chains={chains}>
+      <ConnectKitProvider theme="auto" mode="light" options={{
+          customAvatar: BlockieAvatar,
+        }}>
         <Layout>
           <Component {...pageProps} />
         </Layout>
-      </RainbowKitProvider>
+      </ConnectKitProvider>
     </WagmiConfig>
   </>
 );

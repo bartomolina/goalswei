@@ -1,16 +1,8 @@
 import { useEffect, useState, FormEvent } from "react";
-import DatePicker from "react-datepicker";
-import {
-  useConnect,
-  useDisconnect,
-  useAccount,
-  useContractWrite,
-  useContractRead,
-  ContractMethodNoResultError,
-} from "wagmi";
-import { InjectedConnector } from "wagmi/connectors/injected";
-import { usePrepareContractWrite } from "wagmi";
 import { ethers } from "ethers";
+import { useAccount, useContractWrite } from "wagmi";
+import { usePrepareContractWrite } from "wagmi";
+import DatePicker from "react-datepicker";
 import ContractJSON from "../lib/contract.json";
 
 const tomorrow = new Date();
@@ -25,11 +17,6 @@ const NewResolutionForm = ({ refetch }) => {
     depositAmount: ethers.utils.parseEther("0.01"),
     dueDate: tomorrow.getTime(),
   });
-  // const { connect, isLoading } = useConnect({
-  //   connector: new InjectedConnector(),
-  // });
-  const { connect, isLoading } = useConnect();
-  const { disconnect } = useDisconnect();
   const { address, connector, isConnected } = useAccount();
   const { config, error } = usePrepareContractWrite({
     address: ContractJSON.address,
@@ -51,9 +38,6 @@ const NewResolutionForm = ({ refetch }) => {
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     console.log(formData);
-    if (!isConnected) {
-      connect();
-    }
     if (write) {
       write();
     }
@@ -185,24 +169,15 @@ const NewResolutionForm = ({ refetch }) => {
           <div className="space-x-3">
             <button
               type="submit"
-              disabled={isLoading}
+              disabled={!isConnected}
               className={
-                isLoading
-                  ? "inline-flex justify-center rounded-md border border-transparent bg-indigo-200 py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2"
-                  : "inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 active:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2"
+                isConnected
+                  ? "inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 active:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2"
+                  : "inline-flex justify-center rounded-md border border-transparent bg-indigo-200 py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2"
               }
             >
-              {isLoading ? "Connecting..." : isConnected ? "Set goal" : "Connect wallet"}
+              {isConnected ? "Set goal" : "Connect wallet"}
             </button>
-            {isConnected && (
-              <button
-                type="button"
-                onClick={() => disconnect()}
-                className="inline-flex justify-center rounded-md border border-transparent bg-orange-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-orange-500 active:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-200 focus:ring-offset-2"
-              >
-                Disconnect
-              </button>
-            )}
           </div>
         </form>
       </div>

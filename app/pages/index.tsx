@@ -1,18 +1,13 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
-import { useContractRead } from "wagmi";
 import Hero from "../components/hero";
 import NewResolutionForm from "../components/new-resolution-form";
 import GoalsGrid from "../components/goals-grid";
-import ContractJSON from "../lib/contract.json";
+import { useGoals } from "../components/goals-context";
 
 const Home = () => {
   const [hasMounted, setHasMounted] = useState(false);
-  const { data, refetch } = useContractRead({
-    address: ContractJSON.address,
-    abi: ContractJSON.abi,
-    functionName: "getInstances",
-  });
+  const { goals, refetch } = useGoals();
 
   // To prevent hydration errors:
   // https://codingwithmanny.medium.com/understanding-hydration-errors-in-nextjs-13-with-a-web3-wallet-connection-8155c340fbd5
@@ -37,7 +32,7 @@ const Home = () => {
               <Hero />
             </header>
             <main className=" col-span-3">
-              <NewResolutionForm refetch={refetch} />
+              <NewResolutionForm />
             </main>
           </div>
         </div>
@@ -57,7 +52,7 @@ const Home = () => {
         </svg>
       </div>
       <div className="mx-auto max-w-5xl px-6 lg:px-8 my-8">
-        <GoalsGrid goals={data?.slice().sort((a, b) => a.unlockTime - b.unlockTime)} />
+        <GoalsGrid goals={goals?.slice().sort((a, b) => a.unlockTime - b.unlockTime)} />
       </div>
     </>
   );

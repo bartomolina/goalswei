@@ -4,12 +4,14 @@ import { useAccount, useContractWrite } from "wagmi";
 import { usePrepareContractWrite } from "wagmi";
 import DatePicker from "react-datepicker";
 import ContractJSON from "../lib/contract.json";
+import { useGoals } from "../components/goals-context";
 
 const tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
 
-const NewResolutionForm = ({ refetch }) => {
+const NewResolutionForm = () => {
   const [hasMounted, setHasMounted] = useState(false);
+  const { goals, refetch } = useGoals();
   const [formData, setFormData] = useState({
     goal: "Test",
     arbiter: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",

@@ -25,17 +25,19 @@ function randomDate() {
   return new Date(Math.random() * (nextYear.getTime() - sixMoAgo.getTime() + 1) + sixMoAgo.getTime());
 }
 
-async function createGoal(factory, goal, arbiter, beneficiary, unlockTime, depositor, value) {
-  const createEscrowTx = await factory.connect(depositor).createEscrow(goal, arbiter, beneficiary, unlockTime, {
-    value,
-  });
-}
-
 async function createStaticGoals(factory, signers) {
   for (const goal of staticGoals) {
     const depositor = signers.find((signer) => signer.address === goal.depositor);
     await createGoal(factory, goal.goal, goal.arbiter, goal.beneficiary, goal.unlockTime / 1000, depositor, goal.value);
   }
+}
+
+async function createGoal(factory, goal, arbiter, beneficiary, unlockTime, depositor, value) {
+  const createEscrowTx = await factory.connect(depositor).createEscrow(goal, arbiter, beneficiary, unlockTime, {
+    value,
+  });
+  const receipt = await createEscrowTx.wait();
+  console.log(receipt.events[1].args._instance);
 }
 
 async function main() {
@@ -45,17 +47,9 @@ async function main() {
   signers.slice(1, 11).map((signer, i) => {
     const unlockTime = Math.floor(randomDate().getTime() / 1000);
     const value = ethers.utils.parseEther(Math.random().toFixed(3));
-    const arbiter = signers[Math.floor(Math.random() * 3)].address;    
+    const arbiter = signers[Math.floor(Math.random() * 3)].address;
 
-    createGoal(
-      escrowFactory,
-      goals[i],
-      arbiter,
-      signers[i + 1].address,
-      unlockTime,
-      signers[i],
-      value,
-    );
+    createGoal(escrowFactory, goals[i], arbiter, signers[i + 1].address, unlockTime, signers[i], value);
   });
 
   createStaticGoals(escrowFactory, signers);

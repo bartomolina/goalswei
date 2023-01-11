@@ -1,30 +1,52 @@
 import Head from "next/head";
+import { useAccount } from "wagmi";
+import { writeContract, waitForTransaction } from "@wagmi/core";
 import { useGoals } from "../components/goals-context";
-
-const people = [
-  {
-    name: "Lindsay Walton",
-    title: "Front-end Developer",
-    department: "Optimization",
-    email: "lindsay.walton@example.com",
-    role: "Member",
-    image:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  {
-    name: "Lindsay Walton",
-    title: "Front-end Developer",
-    department: "Optimization",
-    email: "lindsay.walton@example.com",
-    role: "Member",
-    image:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-  // More people...
-];
+import { truncateEthAddress, getTimeRemaining } from "../lib/utils";
+import makeBlockie from "ethereum-blockies-base64";
+import EscrowJSON from "../lib/escrow-contract.json";
 
 const Goals = () => {
   const { goals } = useGoals();
+  const { address } = useAccount();
+  const goalsFiltered = goals.filter((goal) => {
+    return goal.depositor === address || goal.arbiter === address || goal.beneficiary === address;
+  });
+
+  const formatAddress = (_address: `0x${string}`) => {
+    return (
+      <span className={_address === address ? "bg-yellow-50 p-1 text-yellow-700" : ""}>
+        {truncateEthAddress(_address)}
+      </span>
+    );
+  };
+
+  const waitingApproval = (goal) =>
+    goal.unlockTime.toNumber() * 1000 <= Date.now() && !goal.completed && goal.arbiter === address;
+
+  const handleApproveGoal = (event: FormEvent, _address) => {
+    event.preventDefault();
+    console.log("Approving... ", _address);
+
+    writeContract({
+      mode: "recklesslyUnprepared",
+      address: _address,
+      abi: EscrowJSON.abi,
+      functionName: "approve",
+    })
+      .then((hash, wait) => {
+        console.log("tx id: ", hash);
+        return waitForTransaction(hash);
+      })
+      .then((tx) => {
+        console.log("tx: ", tx);
+      });
+  };
+
+  const handleRejectGoal = (event: FormEvent, address) => {
+    event.preventDefault();
+    console.log("Rejecting...", address);
+  };
 
   return (
     <>
@@ -55,33 +77,54 @@ const Goals = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {people.map((person) => (
-                <tr key={person.email}>
-                  <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+              {goalsFiltered.map((goal) => (
+                <tr key={goal.addr}>
+                  <td className="py-4 pl-4 pr-3 text-sm sm:pl-6">
                     <div className="flex items-center">
                       <div className="h-10 w-10 flex-shrink-0">
-                        <img className="h-10 w-10 rounded-full" src={person.image} alt="" />
+                        <img className="h-10 w-10 rounded-full" src={makeBlockie(goal.depositor)} alt="" />
                       </div>
                       <div className="ml-4">
-                        <div className="font-medium text-gray-900">{person.name}</div>
-                        <div className="text-gray-500">{person.email}</div>
+                        <div className="font-medium text-base text-gray-900">{goal.goal}</div>
+                        <div className="text-gray-500">{formatAddress(goal.depositor)}</div>
                       </div>
                     </div>
                   </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                    <div className="text-gray-900">{person.title}</div>
-                    <div className="text-gray-500">{person.department}</div>
+                  <td className="px-3 py-4 text-sm text-gray-500">
+                    <div className="text-gray-900">{formatAddress(goal.arbiter)}</div>
                   </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                  <td className="px-3 py-4 text-sm text-gray-500">
+                    <div className="text-gray-900">{formatAddress(goal.beneficiary)}</div>
+                  </td>
+                  {/* <td className="px-3 py-4 text-sm text-gray-500">
                     <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
                       Active
                     </span>
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{person.role}</td>
-                  <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                    <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                      Edit<span className="sr-only">, {person.name}</span>
-                    </a>
+                  </td> */}
+                  <td className="px-3 py-4 text-sm text-gray-500">{"role"}</td>
+                  <td className="relative py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                    {waitingApproval(goal) && (
+                      <>
+                        <div>
+                          <a
+                            href="#"
+                            onClick={(e) => handleApproveGoal(e, goal.addr)}
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
+                            Goal Completed
+                          </a>
+                        </div>
+                        <div>
+                          <a
+                            href="#"
+                            onClick={(e) => handleRejectGoal(e, goal.addr)}
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
+                            Goal failed
+                          </a>
+                        </div>
+                      </>
+                    )}
                   </td>
                 </tr>
               ))}

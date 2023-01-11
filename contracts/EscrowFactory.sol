@@ -41,7 +41,7 @@ contract EscrowFactory is Ownable {
 
         EscrowStruct memory newEscrow = EscrowStruct(clone, _goal, _arbiter, _beneficiary, _unlockTime, msg.sender, msg.value);
         escrowInstances.push(newEscrow);
-        Escrow(clone).initialize{value: msg.value}(_goal, _arbiter, _beneficiary, _unlockTime);
+        Escrow(clone).initialize{value: msg.value}(msg.sender, _goal, _arbiter, _beneficiary, _unlockTime);
         emit NewInstance(clone);
     }
 

@@ -1,40 +1,16 @@
 import { ethers } from "ethers";
-import { writeContract } from "@wagmi/core";
-import makeBlockie from "ethereum-blockies-base64";
-import ContractJSON from "../lib/contract.json";
 import { truncateEthAddress, getTimeRemaining } from "../lib/utils";
+import makeBlockie from "ethereum-blockies-base64";
 
 const Card = ({ goal }) => {
-  let unlocked = false;
   const unlockTime = goal.unlockTime.toNumber();
   const unlockDate = new Date(unlockTime * 1000).toLocaleDateString();
   const remainingTime = getTimeRemaining(unlockTime);
   let dateColor = "text-red-800";
-  if (remainingTime.includes("in ")) {
-    if (remainingTime.includes("months") || remainingTime.includes("year") || remainingTime.includes("years")) {
-      dateColor = "text-green-700";
-    } else if (remainingTime.includes("month")) {
-      dateColor = "text-orange-400";
-    }
-  } else {
-    unlocked = true;
-  }
-
-  const handleApproveGoal = (event: FormEvent, address) => {
-    event.preventDefault();
-
-    console.log("Approving... ", address);
-    writeContract({
-      mode: "recklesslyUnprepared",
-      address: address,
-      abi: ContractJSON.abi,
-      functionName: "approve",
-    }).then(data => console.log)
-  }
-
-  const handleRejectGoal = (event: FormEvent) => {
-    event.preventDefault();
-    alert("Rejected");
+  if (remainingTime.includes("months") || remainingTime.includes("year") || remainingTime.includes("years")) {
+    dateColor = "text-green-700";
+  } else if (remainingTime.includes("month")) {
+    dateColor = "text-orange-400";
   }
 
   return (
@@ -50,7 +26,7 @@ const Card = ({ goal }) => {
             <div>{`${ethers.utils.formatEther(goal.value)} Ξ`}</div>
             <div className={`rounded-lg px-2 py-1 text-xs font-medium bg-gray-100 ${dateColor}`}>
               <div className="relative group">
-                <span className={unlocked ? "text-yellow-500" : ""}>{unlocked ? "⚠️" : "⏱"}</span>
+                <span>{"⏱"}</span>
                 <span className="ml-1">{getTimeRemaining(goal.unlockTime.toNumber())}</span>
                 <div className="absolute bottom-0 flex flex-col items-center hidden mb-6 group-hover:flex">
                   <span className="relative z-10 p-2 text-xs leading-none text-gray-700 bg-gray-200 shadow-inner">
@@ -73,24 +49,6 @@ const Card = ({ goal }) => {
           <dd className="text-sm text-gray-800">{truncateEthAddress(goal.beneficiary)}</dd>
         </div>
       </dl>
-      {unlocked && (
-        <div className="flex justify-evenly p-3">
-          <button
-            type="submit"
-            onClick={(event) => handleApproveGoal(event, goal.addr)}
-            className="inline-flex justify-center rounded-md border border-transparent bg-green-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-400 active:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-200 focus:ring-offset-2"
-          >
-            Done 👍
-          </button>
-          <button
-            type="submit"
-            onClick={() => handleRejectGoal(goal.beneficiary)}
-            className="inline-flex justify-center rounded-md border border-transparent bg-red-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-400 active:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-200 focus:ring-offset-2"
-          >
-            Failed 👎
-          </button>
-        </div>
-      )}
     </div>
   );
 };

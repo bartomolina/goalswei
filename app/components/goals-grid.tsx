@@ -1,15 +1,12 @@
 import { useGoals } from "./goals-context";
 import Card from "./card";
 
-const GoalsGrid = ({ unlocked = false, filter }) => {
+const GoalsGrid = ({ unlocked = false }) => {
   const { goals } = useGoals();
-  let goalsFiltered = goals?.slice().sort((a, b) => a.unlockTime - b.unlockTime);
-  if (filter) {
-    goalsFiltered = goalsFiltered.filter(goal => goal[filter.field] === filter.value);
-  }
-  goalsFiltered = unlocked
-    ? goalsFiltered.filter((goal) => goal.unlockTime.toNumber() * 1000 <= Date.now())
-    : goalsFiltered.filter((goal) => goal.unlockTime.toNumber() * 1000 > Date.now());
+
+  const goalsFiltered = unlocked
+    ? goals.filter((goal) => goal.unlockTime.toNumber() * 1000 <= Date.now())
+    : goals.filter((goal) => goal.unlockTime.toNumber() * 1000 > Date.now());
 
   return (
     <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">

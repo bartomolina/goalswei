@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { useAccount, useContractWrite } from "wagmi";
 import { usePrepareContractWrite } from "wagmi";
 import DatePicker from "react-datepicker";
-import ContractJSON from "../lib/contract.json";
+import EscrowFactoryJSON from "../lib/escrow-factory-contract.json";
 import { useGoals } from "../components/goals-context";
 
 const tomorrow = new Date();
@@ -21,8 +21,8 @@ const NewResolutionForm = () => {
   });
   const { address, connector, isConnected } = useAccount();
   const { config, error } = usePrepareContractWrite({
-    address: ContractJSON.address,
-    abi: ContractJSON.abi,
+    address: EscrowFactoryJSON.address,
+    abi: EscrowFactoryJSON.abi,
     functionName: "createEscrow",
     args: [formData.goal, formData.arbiter, formData.beneficiary, Math.floor(formData.dueDate / 1000)],
     overrides: {

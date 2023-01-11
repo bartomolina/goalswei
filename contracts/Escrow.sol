@@ -48,4 +48,17 @@ contract Escrow is Initializable {
         emit Approved(balance);
         isApproved = true;
     }
+
+    function reject() external {
+        require(msg.sender == arbiter);
+        require(block.timestamp >= unlockTime, "Goal not due");
+        uint balance = address(this).balance;
+        (bool sent, ) = payable(beneficiary).call{value: balance}("");
+        require(sent, "Failed to send Ether");
+        emit Approved(balance);
+        isApproved = true;
+    }
+
+    function withdraw() external {
+    }
 }

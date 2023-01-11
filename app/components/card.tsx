@@ -1,5 +1,7 @@
 import { ethers } from "ethers";
+import { writeContract } from "@wagmi/core";
 import makeBlockie from "ethereum-blockies-base64";
+import ContractJSON from "../lib/contract.json";
 import { truncateEthAddress, getTimeRemaining } from "../lib/utils";
 
 const Card = ({ goal }) => {
@@ -18,9 +20,16 @@ const Card = ({ goal }) => {
     unlocked = true;
   }
 
-  const handleApproveGoal = (event: FormEvent) => {
+  const handleApproveGoal = (event: FormEvent, address) => {
     event.preventDefault();
-    alert("Approved");
+
+    console.log("Approving... ", address);
+    writeContract({
+      mode: "recklesslyUnprepared",
+      address: address,
+      abi: ContractJSON.abi,
+      functionName: "approve",
+    }).then(data => console.log)
   }
 
   const handleRejectGoal = (event: FormEvent) => {
@@ -68,14 +77,14 @@ const Card = ({ goal }) => {
         <div className="flex justify-evenly p-3">
           <button
             type="submit"
-            onClick={handleApproveGoal}
+            onClick={(event) => handleApproveGoal(event, goal.addr)}
             className="inline-flex justify-center rounded-md border border-transparent bg-green-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-green-400 active:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-200 focus:ring-offset-2"
           >
             Done 👍
           </button>
           <button
             type="submit"
-            onClick={handleRejectGoal}
+            onClick={() => handleRejectGoal(goal.beneficiary)}
             className="inline-flex justify-center rounded-md border border-transparent bg-red-500 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-red-400 active:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-200 focus:ring-offset-2"
           >
             Failed 👎

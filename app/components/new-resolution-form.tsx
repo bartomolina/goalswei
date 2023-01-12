@@ -2,6 +2,7 @@ import { useEffect, useState, FormEvent } from "react";
 import { ethers } from "ethers";
 import { useAccount, useContractWrite } from "wagmi";
 import { usePrepareContractWrite } from "wagmi";
+// @ts-ignore
 import DatePicker from "react-datepicker";
 import EscrowFactoryJSON from "../lib/escrow-factory-contract.json";
 import { useGoals } from "../components/goals-context";
@@ -22,6 +23,7 @@ const NewResolutionForm = () => {
   const { address, connector, isConnected } = useAccount();
   const { config, error } = usePrepareContractWrite({
     address: EscrowFactoryJSON.address,
+    // @ts-ignore
     abi: EscrowFactoryJSON.abi,
     functionName: "createEscrow",
     args: [formData.goal, formData.arbiter, formData.beneficiary, Math.floor(formData.dueDate / 1000)],
@@ -29,6 +31,7 @@ const NewResolutionForm = () => {
       value: formData.depositAmount,
     },
   });
+  // @ts-ignore
   const { write } = useContractWrite({
     ...config,
     onSuccess(data) {
@@ -43,7 +46,7 @@ const NewResolutionForm = () => {
     }
   };
 
-  const handleFormChange = (event: FormEvent) => {
+  const handleFormChange = (event: FormEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [event.currentTarget.id]: event.currentTarget.value,
@@ -53,11 +56,12 @@ const NewResolutionForm = () => {
   const handleDateChange = (event: FormEvent) => {
     setFormData({
       ...formData,
+      // @ts-ignore
       dueDate: event.getTime(),
     });
   };
 
-  const handleETHChange = (event: FormEvent) => {
+  const handleETHChange = (event: FormEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [event.currentTarget.id]: ethers.utils.parseEther(event.currentTarget.value),

@@ -1,4 +1,7 @@
+import { IGoal } from "../global";
+import { FormEvent } from "react";
 import Head from "next/head";
+import Image from "next/image";
 import { useAccount } from "wagmi";
 import { writeContract, waitForTransaction } from "@wagmi/core";
 import { useGoals } from "../components/goals-context";
@@ -9,7 +12,7 @@ import EscrowJSON from "../lib/escrow-contract.json";
 const Goals = () => {
   const { goals } = useGoals();
   const { address } = useAccount();
-  const goalsFiltered = goals.filter((goal) => {
+  const goalsFiltered = goals.filter((goal: IGoal) => {
     return goal.depositor === address || goal.arbiter === address || goal.beneficiary === address;
   });
 
@@ -21,19 +24,21 @@ const Goals = () => {
     );
   };
 
-  const waitingApproval = (goal) =>
+  const waitingApproval = (goal: IGoal) =>
     goal.unlockTime.toNumber() * 1000 <= Date.now() && !goal.completed && goal.arbiter === address;
 
-  const handleApproveGoal = (event: FormEvent, _address) => {
+  const handleApproveGoal = (event: FormEvent, _address: `0x${string}`) => {
     event.preventDefault();
     console.log("Approving... ", _address);
 
     writeContract({
       mode: "recklesslyUnprepared",
       address: _address,
+      // @ts-ignore
       abi: EscrowJSON.abi,
       functionName: "approve",
     })
+      // @ts-ignore
       .then((hash, wait) => {
         console.log("tx id: ", hash);
         return waitForTransaction(hash);
@@ -43,7 +48,7 @@ const Goals = () => {
       });
   };
 
-  const handleRejectGoal = (event: FormEvent, address) => {
+  const handleRejectGoal = (event: FormEvent, address: `0x${string}`) => {
     event.preventDefault();
     console.log("Rejecting...", address);
   };
@@ -77,12 +82,12 @@ const Goals = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200 bg-white">
-              {goalsFiltered.map((goal) => (
+              {goalsFiltered.map((goal: IGoal) => (
                 <tr key={goal.addr}>
                   <td className="py-4 pl-4 pr-3 text-sm sm:pl-6">
                     <div className="flex items-center">
                       <div className="h-10 w-10 flex-shrink-0">
-                        <img className="h-10 w-10 rounded-full" src={makeBlockie(goal.depositor)} alt="" />
+                        <Image width={10} height={10} className="h-10 w-10 rounded-xl" src={makeBlockie(goal.depositor)} alt="" />
                       </div>
                       <div className="ml-4">
                         <div className="font-medium text-base text-gray-900">{goal.goal}</div>

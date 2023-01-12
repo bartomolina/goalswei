@@ -13,6 +13,7 @@ const BlockieAvatar = ({ address, ensImage, ensName, size, radius }: Types.Custo
     >
       {ensImage ?
       <img src={ensImage} alt={ensName ?? address} width="100%" height="100%" /> :
+      // @ts-ignore
       <img src={makeBlockie(address)} alt={address} width="100%" height="100%" />
     }
     </div>

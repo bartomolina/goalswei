@@ -1,8 +1,14 @@
+import Image from "next/image";
+import { IGoal } from "../global";
 import { ethers } from "ethers";
 import { truncateEthAddress, getTimeRemaining } from "../lib/utils";
 import makeBlockie from "ethereum-blockies-base64";
 
-const Card = ({ goal }) => {
+type Props = {
+  goal: IGoal;
+}
+
+const Card = ({ goal } : Props) => {
   const unlockTime = goal.unlockTime.toNumber();
   const unlockDate = new Date(unlockTime * 1000).toLocaleDateString();
   const remainingTime = getTimeRemaining(unlockTime);
@@ -17,7 +23,7 @@ const Card = ({ goal }) => {
     <div className="bg-white divide-y w-full">
       <div className="flex pt-5 px-5 mb-3">
         <div className="flex-none">
-          <img className="h-14 w-14 rounded-xl" src={makeBlockie(goal.depositor)} alt="" />
+          <Image width={14} height={14} className="h-14 w-14 rounded-xl" src={makeBlockie(goal.depositor)} alt="" />
           <p className="text-xs text-center mt-1 text-gray-500">{truncateEthAddress(goal.depositor, "first")}</p>
         </div>
         <div className="ml-4 content-between grid w-full">

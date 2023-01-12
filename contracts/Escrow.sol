@@ -2,6 +2,7 @@
 pragma solidity 0.8.17;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "./EscrowFactory.sol";
 
 //  _                _                        _ _                   _   _
 // | |              | |                      | (_)                 | | | |
@@ -11,12 +12,18 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 // |_.__/ \__,_|_|   \__\___/|_| |_| |_|\___/|_|_|_| |_|\__,_(_)___|\__|_| |_|
 
 contract Escrow is Initializable {
+    address factory;
     string public goal;
     address public arbiter;
     address public beneficiary;
     address public depositor;
     uint256 public unlockTime;
-    bool public completed;
+    enum Status {
+        Pending,
+        Approved,
+        Rejected
+    }
+    Status public status = Status.Pending;
 
     constructor() initializer {}
 
@@ -31,6 +38,7 @@ contract Escrow is Initializable {
         //     block.timestamp < _unlockTime,
         //     "Goal due date should be in the future"
         // );
+        factory = msg.sender;
         depositor = _depositor;
         goal = _goal;
         arbiter = _arbiter;
@@ -38,24 +46,24 @@ contract Escrow is Initializable {
         unlockTime = _unlockTime;
     }
 
-    event Approved(uint);
+    event Approved(uint balance);
 
     function approve() external {
         require(msg.sender == arbiter);
         require(block.timestamp >= unlockTime, "Goal not due");
-        completed = true;
+        status = Status.Approved;
         uint balance = address(this).balance;
         (bool sent, ) = payable(depositor).call{value: balance}("");
         require(sent, "Failed to send Ether");
         emit Approved(balance);
     }
 
-    event Rejected(uint);
+    event Rejected(uint balance);
 
     function reject() external {
         require(msg.sender == arbiter);
         require(block.timestamp >= unlockTime, "Goal not due");
-        completed = true;
+        status = Status.Rejected;
         uint balance = address(this).balance;
         (bool sent, ) = payable(beneficiary).call{value: balance}("");
         require(sent, "Failed to send Ether");

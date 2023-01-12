@@ -5,19 +5,9 @@ import EscrowFactoryJSON from "../lib/escrow-factory-contract.json";
 import EscrowJSON from "../lib/escrow-contract.json";
 import { IGoal } from "../global";
 
-
-
-// type UpdateType = Dispatch<SetStateAction<IGoal[]>>;
-// const defaultUpdate: UpdateType = () => defaultValue;
-// const ctx = createContext({
-//   state: defaultValue,
-//   update: defaultUpdate,
-// });
-
-
-
 const GoalsContext = createContext({
   goals: [],
+  beneficiaries: [],
   fetchGoals: () => {},
 });
 
@@ -25,9 +15,18 @@ export const useGoals = () => useContext(GoalsContext);
 
 export const GoalsProvider = ({ children }: React.PropsWithChildren) => {
   const [goals, setGoals] = useState([] as any);
+  const [beneficiaries, setBeneficiaries] = useState([] as any);
 
   const fetchGoals = () => {
     let _goals: IGoal[] = [];
+
+    readContract({
+      address: EscrowFactoryJSON.address,
+      abi: EscrowFactoryJSON.abi as any,
+      functionName: "getBeneficiaries",
+    }).then((beneficiaries: any) => {
+      console.log("Beneficiaries: ", beneficiaries);
+    });
 
     readContract({
       address: EscrowFactoryJSON.address,
@@ -51,15 +50,15 @@ export const GoalsProvider = ({ children }: React.PropsWithChildren) => {
             return readContract({
               address: goal.addr,
               abi: EscrowJSON.abi as any,
-              functionName: "completed",
+              functionName: "status",
             });
           })
         );
       })
       .then((data: any) => {
-        _goals.forEach((goal, i) => (goal.completed = data[i]));
+        _goals.forEach((goal, i) => (goal.status = data[i]));
         setGoals(_goals);
-        console.log(_goals);
+        console.log("Goals: ", _goals);
       });
   };
 

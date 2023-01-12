@@ -5,10 +5,10 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/proxy/Clones.sol";
 import "./Escrow.sol";
 
-//  _                _                        _ _                   _   _     
-// | |              | |                      | (_)                 | | | |    
-// | |__   __ _ _ __| |_ ___  _ __ ___   ___ | |_ _ __   __ _   ___| |_| |__  
-// | '_ \ / _` | '__| __/ _ \| '_ ` _ \ / _ \| | | '_ \ / _` | / _ \ __| '_ \ 
+//  _                _                        _ _                   _   _
+// | |              | |                      | (_)                 | | | |
+// | |__   __ _ _ __| |_ ___  _ __ ___   ___ | |_ _ __   __ _   ___| |_| |__
+// | '_ \ / _` | '__| __/ _ \| '_ ` _ \ / _ \| | | '_ \ / _` | / _ \ __| '_ \
 // | |_) | (_| | |  | || (_) | | | | | | (_) | | | | | | (_| ||  __/ |_| | | |
 // |_.__/ \__,_|_|   \__\___/|_| |_| |_|\___/|_|_|_| |_|\__,_(_)___|\__|_| |_|
 
@@ -25,11 +25,18 @@ contract EscrowFactory is Ownable {
     }
     EscrowStruct[] public escrowInstances;
 
-    event NewInstance(address indexed _instance);
+    struct BeneficiaryStruct {
+        address addr;
+        string info;
+    }
+    BeneficiaryStruct[] public beneficiariesList;
+    mapping(address => bool) allowedBeneficiaries;
 
     constructor() {
         escrowAddress = address(new Escrow());
     }
+
+    event NewInstance(address indexed _instance);
 
     function createEscrow(
         string calldata _goal,
@@ -37,15 +44,47 @@ contract EscrowFactory is Ownable {
         address _beneficiary,
         uint256 _unlockTime
     ) public payable returns (address clone) {
+        require(
+            allowedBeneficiaries[_beneficiary],
+            "Beneficiary not registered"
+        );
+
         clone = Clones.clone(escrowAddress);
 
-        EscrowStruct memory newEscrow = EscrowStruct(clone, _goal, _arbiter, _beneficiary, _unlockTime, msg.sender, msg.value);
+        EscrowStruct memory newEscrow = EscrowStruct(
+            clone,
+            _goal,
+            _arbiter,
+            _beneficiary,
+            _unlockTime,
+            msg.sender,
+            msg.value
+        );
         escrowInstances.push(newEscrow);
-        Escrow(clone).initialize{value: msg.value}(msg.sender, _goal, _arbiter, _beneficiary, _unlockTime);
+        Escrow(clone).initialize{value: msg.value}(
+            msg.sender,
+            _goal,
+            _arbiter,
+            _beneficiary,
+            _unlockTime
+        );
         emit NewInstance(clone);
     }
 
-    function getInstances() external view returns(EscrowStruct[] memory) {
+    function getInstances() external view returns (EscrowStruct[] memory) {
         return escrowInstances;
+    }
+
+    event BeneficiaryAdded(address indexed beneficiary, string info);
+
+    function addBeneficiary(string calldata info) external {
+        allowedBeneficiaries[msg.sender] = true;
+        beneficiariesList.push(BeneficiaryStruct(msg.sender, info));
+
+        emit BeneficiaryAdded(msg.sender, info);
+    }
+
+    function getBeneficiaries() external view returns (BeneficiaryStruct[] memory) {
+        return beneficiariesList;
     }
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState, FormEvent } from "react";
 import { ethers } from "ethers";
-import { useAccount, useContractWrite } from "wagmi";
-import { usePrepareContractWrite } from "wagmi";
+import { useAccount } from "wagmi";
+import { writeContract, waitForTransaction } from "@wagmi/core";
 // @ts-ignore
 import DatePicker from "react-datepicker";
 import EscrowFactoryJSON from "../lib/escrow-factory-contract.json";
@@ -11,6 +11,7 @@ const tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
 
 const NewResolutionForm = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const { fetchGoals } = useGoals();
   const [formData, setFormData] = useState({
@@ -20,30 +21,32 @@ const NewResolutionForm = () => {
     depositAmount: ethers.utils.parseEther("0.01"),
     dueDate: tomorrow.getTime(),
   });
-  const { address, connector, isConnected } = useAccount();
-  const { config, error } = usePrepareContractWrite({
-    address: EscrowFactoryJSON.address,
-    // @ts-ignore
-    abi: EscrowFactoryJSON.abi,
-    functionName: "createEscrow",
-    args: [formData.goal, formData.arbiter, formData.beneficiary, Math.floor(formData.dueDate / 1000)],
-    overrides: {
-      value: formData.depositAmount,
-    },
-  });
-  // @ts-ignore
-  const { write } = useContractWrite({
-    ...config,
-    onSuccess(data) {
-      fetchGoals();
-    },
-  });
+  const { isConnected } = useAccount();
 
   const handleSubmit = (event: FormEvent) => {
+    setIsLoading(true);
     event.preventDefault();
-    if (write) {
-      write();
-    }
+
+    writeContract({
+      mode: "recklesslyUnprepared",
+      address: EscrowFactoryJSON.address,
+      // @ts-ignore
+      abi: EscrowFactoryJSON.abi,
+      functionName: "createEscrow",
+      args: [formData.goal, formData.arbiter, formData.beneficiary, Math.floor(formData.dueDate / 1000)],
+      overrides: {
+        value: formData.depositAmount,
+      },
+    })
+      // @ts-ignore
+      .then((hash, wait) => {
+        return waitForTransaction(hash);
+      })
+      .then((tx) => {
+        setIsLoading(false);
+        fetchGoals();
+      })
+      .catch((error) => setIsLoading(false));
   };
 
   const handleFormChange = (event: FormEvent<HTMLInputElement>) => {
@@ -173,9 +176,9 @@ const NewResolutionForm = () => {
           <div className="flex justify-center">
             <button
               type="submit"
-              disabled={!isConnected}
+              disabled={!isConnected || isLoading}
               className={
-                isConnected
+                isConnected && !isLoading
                   ? "w-full rounded-lg bg-indigo-600 py-3 text-lg font-medium text-white shadow-md hover:bg-indigo-500 active:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2"
                   : "w-full rounded-lg bg-indigo-200 py-3 text-lg font-medium text-white shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2"
               }

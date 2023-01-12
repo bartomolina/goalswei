@@ -1,4 +1,5 @@
 import { BigNumber } from "ethers";
+import { GoalStatusEnum } from "./lib/utils";
 
 interface Window {
   ethereum: ExternalProvider;
@@ -11,8 +12,13 @@ interface IGoal {
   beneficiary: `0x${string}`;
   depositor: `0x${string}`;
   unlockTime: BigNumber;
-  completed: boolean;
+  status: GoalStatus;
   value: BigNumber;
+}
+
+interface IBeneficiary {
+  addr: `0x${string}`;
+  info: string;
 }
 
 declare namespace NodeJS {

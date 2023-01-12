@@ -13,8 +13,7 @@ const goals = [
   "Research p5.js and generative art",
   "Travel the world",
   "Weekly post on lens",
-  // "Take the stairs",
-  // "Start a new hobby",
+  "Take the stairs",
 ];
 
 function randomDate() {
@@ -40,19 +39,30 @@ async function createGoal(factory, goal, arbiter, beneficiary, unlockTime, depos
   console.log(receipt.events[1].args._instance);
 }
 
+async function addBeneficiary(factory, signer) {
+  const addBeneficiaryTx = await factory.connect(signer).addBeneficiary("https://github.com/");
+  const receipt = await addBeneficiaryTx.wait();
+}
+
 async function main() {
   const signers = await ethers.getSigners();
   const escrowFactory = await ethers.getContractAt("EscrowFactory", escrowFactoryAddress);
 
-  signers.slice(1, 11).map((signer, i) => {
+  const testNumber = 10;
+
+  for (let i = 0; i <= testNumber; i++) {
+    await addBeneficiary(escrowFactory, signers[i]);
+  }
+
+  for (let i = 0; i < testNumber; i++) {
     const unlockTime = Math.floor(randomDate().getTime() / 1000);
     const value = ethers.utils.parseEther(Math.random().toFixed(3));
     const arbiter = signers[Math.floor(Math.random() * 3)].address;
 
-    createGoal(escrowFactory, goals[i], arbiter, signers[i + 1].address, unlockTime, signers[i], value);
-  });
+    await createGoal(escrowFactory, goals[i], arbiter, signers[i + 1].address, unlockTime, signers[i], value);
+  }
 
-  createStaticGoals(escrowFactory, signers);
+  await createStaticGoals(escrowFactory, signers);
 }
 
 main().catch((error) => {

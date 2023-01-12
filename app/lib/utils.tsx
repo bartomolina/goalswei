@@ -1,3 +1,9 @@
+enum GoalStatusEnum {
+  Pending,
+  Approved,
+  Rejected
+}
+
 const truncateRegex = /^(0x[a-zA-Z0-9]{4})[a-zA-Z0-9]+([a-zA-Z0-9]{4})$/;
 const truncateEthAddress = (address: string, half?: "first" | "second") => {
   if (address) {
@@ -31,4 +37,4 @@ const getTimeRemaining = (timestamp: number) => {
   return "";
 };
 
-export { truncateEthAddress, getTimeRemaining };
+export { truncateEthAddress, getTimeRemaining, GoalStatusEnum };

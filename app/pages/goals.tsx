@@ -1,5 +1,5 @@
 import { IGoal } from "../global";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import Head from "next/head";
 import Image from "next/image";
 import { useAccount } from "wagmi";
@@ -10,8 +10,10 @@ import makeBlockie from "ethereum-blockies-base64";
 import EscrowJSON from "../lib/escrow-contract.json";
 
 const Goals = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const { goals } = useGoals();
   const { address } = useAccount();
+  const { fetchGoals } = useGoals();
   const goalsFiltered = goals.filter((goal: IGoal) => {
     return goal.depositor === address || goal.arbiter === address || goal.beneficiary === address;
   });
@@ -27,30 +29,26 @@ const Goals = () => {
   const waitingApproval = (goal: IGoal) =>
     goal.unlockTime.toNumber() * 1000 <= Date.now() && !goal.completed && goal.arbiter === address;
 
-  const handleApproveGoal = (event: FormEvent, _address: `0x${string}`) => {
+  const handleApproval = (event: FormEvent, _address: `0x${string}`, action: string) => {
+    setIsLoading(true);
     event.preventDefault();
-    console.log("Approving... ", _address);
 
     writeContract({
       mode: "recklesslyUnprepared",
       address: _address,
       // @ts-ignore
       abi: EscrowJSON.abi,
-      functionName: "approve",
+      functionName: action,
     })
       // @ts-ignore
       .then((hash, wait) => {
-        console.log("tx id: ", hash);
         return waitForTransaction(hash);
       })
       .then((tx) => {
-        console.log("tx: ", tx);
-      });
-  };
-
-  const handleRejectGoal = (event: FormEvent, address: `0x${string}`) => {
-    event.preventDefault();
-    console.log("Rejecting...", address);
+        setIsLoading(false);
+        fetchGoals();
+      })
+      .catch((error) => setIsLoading(false));
   };
 
   return (
@@ -87,10 +85,16 @@ const Goals = () => {
                   <td className="py-4 pl-4 pr-3 text-sm sm:pl-6">
                     <div className="flex items-center">
                       <div className="h-10 w-10 flex-shrink-0">
-                        <Image width={10} height={10} className="h-10 w-10 rounded-xl" src={makeBlockie(goal.depositor)} alt="" />
+                        <Image
+                          width={10}
+                          height={10}
+                          className="h-10 w-10 rounded-xl"
+                          src={makeBlockie(goal.depositor)}
+                          alt=""
+                        />
                       </div>
                       <div className="ml-4">
-                        <div className="font-medium text-base text-gray-900">{goal.goal}</div>
+                        <div className="font-semibold text-lg text-gray-800">{goal.goal}</div>
                         <div className="text-gray-500">{formatAddress(goal.depositor)}</div>
                       </div>
                     </div>
@@ -107,28 +111,34 @@ const Goals = () => {
                     </span>
                   </td> */}
                   <td className="px-3 py-4 text-sm text-gray-500">{"role"}</td>
-                  <td className="relative py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
+                  <td className="relative py-2 pl-3 pr-4 text-right text-2xl font-medium sm:pr-6">
                     {waitingApproval(goal) && (
-                      <>
-                        <div>
-                          <a
-                            href="#"
-                            onClick={(e) => handleApproveGoal(e, goal.addr)}
-                            className="text-indigo-600 hover:text-indigo-900"
-                          >
-                            Goal Completed
-                          </a>
-                        </div>
-                        <div>
-                          <a
-                            href="#"
-                            onClick={(e) => handleRejectGoal(e, goal.addr)}
-                            className="text-indigo-600 hover:text-indigo-900"
-                          >
-                            Goal failed
-                          </a>
-                        </div>
-                      </>
+                      <div className="space-x-3 flex justify-center">
+                        <button
+                          type="button"
+                          onClick={(e) => handleApproval(e, goal.addr, "approve")}
+                          disabled={isLoading}
+                          className={
+                            !isLoading
+                              ? "rounded bg-green-600 py-2 px-3 text-white shadow-sm hover:bg-green-500 active:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-200 focus:ring-offset-2"
+                              : "rounded bg-green-200 py-2 px-3 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-green-200 focus:ring-offset-2"
+                          }
+                        >
+                          {"👍"}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={(e) => handleApproval(e, goal.addr, "reject")}
+                          disabled={isLoading}
+                          className={
+                            !isLoading
+                              ? "rounded bg-red-600 py-2 px-3 text-white shadow-sm hover:bg-red-500 active:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-200 focus:ring-offset-2"
+                              : "rounded bg-red-200 py-2 px-3 text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-red-200 focus:ring-offset-2"
+                          }
+                        >
+                          {"👎"}
+                        </button>
+                      </div>
                     )}
                   </td>
                 </tr>

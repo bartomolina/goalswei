@@ -2,7 +2,6 @@
 pragma solidity 0.8.17;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
-import "hardhat/console.sol";
 
 //  _                _                        _ _                   _   _
 // | |              | |                      | (_)                 | | | |
@@ -46,9 +45,6 @@ contract Escrow is Initializable {
         require(block.timestamp >= unlockTime, "Goal not due");
         completed = true;
         uint balance = address(this).balance;
-        console.log("Sending... ");
-        console.log("Address: ", depositor);
-        console.log("Balance: ", balance);
         (bool sent, ) = payable(depositor).call{value: balance}("");
         require(sent, "Failed to send Ether");
         emit Approved(balance);

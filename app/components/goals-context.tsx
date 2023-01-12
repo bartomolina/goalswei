@@ -57,7 +57,6 @@ export const GoalsProvider = ({ children }: React.PropsWithChildren) => {
         );
       })
       .then((data: any) => {
-        console.log(data);
         _goals.forEach((goal, i) => (goal.completed = data[i]));
         setGoals(_goals);
         console.log(_goals);

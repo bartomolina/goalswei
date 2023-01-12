@@ -6,8 +6,10 @@ import { WagmiConfig } from "wagmi";
 import client from "../lib/wagmi";
 import { ConnectKitProvider } from "connectkit";
 
-import Layout from "../components/layout";
 import { GoalsProvider } from "../components/goals-context";
+import { NotificationsProvider } from "../components/notifications-context";
+import Layout from "../components/layout";
+import Notification from "../components/notification";
 import BlockieAvatar from "../lib/connect-button-avatar";
 
 const App = ({ Component, pageProps }: AppProps) => (
@@ -23,11 +25,14 @@ const App = ({ Component, pageProps }: AppProps) => (
           customAvatar: BlockieAvatar,
         }}
       >
-        <GoalsProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </GoalsProvider>
+        <NotificationsProvider>
+          <GoalsProvider>
+            <Layout>
+              <Component {...pageProps} />
+              <Notification />
+            </Layout>
+          </GoalsProvider>
+        </NotificationsProvider>
       </ConnectKitProvider>
     </WagmiConfig>
   </>

@@ -39,8 +39,8 @@ async function createGoal(factory, goal, arbiter, beneficiary, unlockTime, depos
   console.log(receipt.events[1].args._instance);
 }
 
-async function addBeneficiary(factory, signer) {
-  const addBeneficiaryTx = await factory.connect(signer).addBeneficiary("https://github.com/");
+async function addBeneficiary(factory, address) {
+  const addBeneficiaryTx = await factory.addBeneficiary(address, "https://github.com/");
   const receipt = await addBeneficiaryTx.wait();
 }
 
@@ -51,7 +51,7 @@ async function main() {
   const testNumber = 10;
 
   for (let i = 0; i <= testNumber; i++) {
-    await addBeneficiary(escrowFactory, signers[i]);
+    await addBeneficiary(escrowFactory, signers[i].address);
   }
 
   for (let i = 0; i < testNumber; i++) {

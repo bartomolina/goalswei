@@ -25,19 +25,25 @@ const GoalStatus = ({ goal }: Props) => {
   }
 
   let statusText = "awaiting arbiter";
-  let statusStyle = "bg-gray-100";
+  let statusStyle = "";
   switch (goal.status) {
     case GoalStatusEnum.Approved:
       statusText = "approved";
-      statusStyle = "bg-green-100 text-green-500";
+      statusStyle = "text-green-500";
       break;
     case GoalStatusEnum.Rejected:
       statusText = "rejected";
-      statusStyle = "bg-red-100 text-red-500";
+      statusStyle = "text-red-500";
   }
 
   return (
-    <div className="flex flex-col space-y-2">
+    <div className="flex flex-col space-y-1">
+      {unlocked && (
+        <div className={`m-auto px-2 text-xs font-medium ${statusStyle}`}>
+          <span>{statusText}</span>
+          <br />
+        </div>
+      )}
       <div className={`m-auto rounded-lg px-2 py-1 text-xs font-medium bg-gray-100 ${dateColor}`}>
         <div className="relative group">
           <span>{unlocked ? "" : "⏱"}</span>
@@ -50,12 +56,6 @@ const GoalStatus = ({ goal }: Props) => {
           </div>
         </div>
       </div>
-      {unlocked && (
-        <div className={`m-auto rounded-lg px-2 py-1 text-xs font-medium ${statusStyle}`}>
-          <span>{statusText}</span>
-          <br />
-        </div>
-      )}
     </div>
   );
 };

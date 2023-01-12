@@ -26,10 +26,10 @@ const Home = () => {
       <div className="bg-gray-100">
         <div className="mx-auto max-w-6xl sm:px-6 lg:px-8">
           <div className="p-4 md:pt-8 sm:px-0 md:grid md:grid-cols-7 gap-3">
-            <header className="content-center md:pt-16 lg:mr-16 mb-5 md:mb-0 col-span-4">
+            <header className="content-center md:pt-14 lg:mr-16 mb-5 md:mb-0 col-span-4">
               <Hero />
             </header>
-            <main className=" col-span-3">
+            <main className="col-span-3">
               <NewResolutionForm />
             </main>
           </div>

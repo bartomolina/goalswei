@@ -6,13 +6,15 @@ import { writeContract, waitForTransaction } from "@wagmi/core";
 import DatePicker from "react-datepicker";
 import EscrowFactoryJSON from "../lib/escrow-factory-contract.json";
 import { useGoals } from "../components/goals-context";
+import { useNotifications } from "./notifications-context";
 
 const tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
 
 const NewResolutionForm = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
+  const { setShow, show, notification } = useNotifications();
+  const [isLoading, setIsLoading] = useState(false);
   const { fetchGoals } = useGoals();
   const [formData, setFormData] = useState({
     goal: "Test",
@@ -24,8 +26,12 @@ const NewResolutionForm = () => {
   const { isConnected } = useAccount();
 
   const handleSubmit = (event: FormEvent) => {
-    setIsLoading(true);
+    // setIsLoading(true);
     event.preventDefault();
+    
+    // @ts-ignore
+    setShow(show ? false : true);
+    return ;
 
     writeContract({
       mode: "recklesslyUnprepared",
@@ -183,7 +189,7 @@ const NewResolutionForm = () => {
                   : "w-full rounded-lg bg-indigo-200 py-3 text-lg font-medium text-white shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2"
               }
             >
-              {isConnected ? "LFG!" : "Connect wallet"}
+              {isConnected ? <><span>LFG</span><span className="ml-4">🚀</span></> : "Connect wallet"}
             </button>
           </div>
         </form>

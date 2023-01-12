@@ -1,4 +1,4 @@
-import { createContext, Dispatch, FC, SetStateAction, useContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { useAccount } from "wagmi";
 import { readContract } from "@wagmi/core";
 import EscrowFactoryJSON from "../lib/escrow-factory-contract.json";
@@ -25,6 +25,7 @@ export const GoalsProvider = ({ children }: React.PropsWithChildren) => {
       abi: EscrowFactoryJSON.abi as any,
       functionName: "getBeneficiaries",
     }).then((beneficiaries: any) => {
+      setBeneficiaries(beneficiaries);
       console.log("Beneficiaries: ", beneficiaries);
     });
 
@@ -68,5 +69,5 @@ export const GoalsProvider = ({ children }: React.PropsWithChildren) => {
     },
   });
 
-  return <GoalsContext.Provider value={{ goals, fetchGoals }}>{children}</GoalsContext.Provider>;
+  return <GoalsContext.Provider value={{ goals, beneficiaries, fetchGoals }}>{children}</GoalsContext.Provider>;
 };

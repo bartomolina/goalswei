@@ -1,5 +1,5 @@
 const Hero = () => (
-  <div className="space-y-2">
+  <div className="space-y-2 text-lg">
     <p className="text-gray-800 block lg:text-5xl md:text-4xl text-3xl font-bold -mb-1">Achieve your goals</p>
     <p className="text-indigo-900 block lg:text-4xl md:text-3xl text-2xl font-bold">Support awesome devs</p>
     <p className="text-gray-500 pt-3">

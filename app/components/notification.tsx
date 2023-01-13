@@ -1,11 +1,13 @@
 import { Fragment } from "react";
 import { Transition } from "@headlessui/react";
-import { CheckCircleIcon } from "@heroicons/react/24/outline";
-import { XMarkIcon } from "@heroicons/react/20/solid";
+import { CheckCircleIcon, LinkIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import { useNotifications } from "./notifications-context";
 
 const Notification = () => {
-  const { show, setShow, notification } = useNotifications();
+  const { notification, show, setShow } = useNotifications();
+  const isError = notification.type === "error";
+
   return (
     <>
       <div
@@ -27,19 +29,29 @@ const Notification = () => {
               <div className="p-4">
                 <div className="flex items-start">
                   <div className="flex-shrink-0">
-                    <CheckCircleIcon className="h-6 w-6 text-green-400" aria-hidden="true" />
+                    {isError ? (
+                      <XCircleIcon className="h-6 w-6 text-red-400" aria-hidden="true" />
+                    ) : (
+                      <CheckCircleIcon className="h-6 w-6 text-green-400" aria-hidden="true" />
+                    )}
                   </div>
                   <div className="ml-3 w-0 flex-1 pt-0.5">
-                    <p className="text-sm font-medium text-gray-900">
-                      {
-                        // @ts-ignore
-                        notification.message
-                      }
+                    <p className="text-sm font-medium text-gray-900">{notification.title}</p>
+                    <p className="mt-1 text-sm text-gray-500">
+                      {isError ? (
+                        <span>{notification.error}</span>
+                      ) : (
+                        <a
+                          href={`https://etherscan.io/tx/${notification.txId}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:underline"
+                        >
+                          View transaction
+                          <LinkIcon className="inline ml-0.5 h-1.5 w-1.5 align-top" aria-hidden="true" />
+                        </a>
+                      )}
                     </p>
-                    <p className="mt-1 text-sm text-gray-500">{`tx: ${
-                      // @ts-ignore
-                      notification.txId
-                    }`}</p>
                   </div>
                   <div className="ml-4 flex flex-shrink-0">
                     <button

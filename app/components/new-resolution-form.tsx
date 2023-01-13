@@ -13,7 +13,7 @@ tomorrow.setDate(tomorrow.getDate() + 1);
 
 const NewResolutionForm = () => {
   const [hasMounted, setHasMounted] = useState(false);
-  const { setShow, show, notification } = useNotifications();
+  const { showNotification, showError } = useNotifications();
   const [isLoading, setIsLoading] = useState(false);
   const { fetchGoals } = useGoals();
   const [formData, setFormData] = useState({
@@ -26,12 +26,8 @@ const NewResolutionForm = () => {
   const { isConnected } = useAccount();
 
   const handleSubmit = (event: FormEvent) => {
-    // setIsLoading(true);
+    setIsLoading(true);
     event.preventDefault();
-    
-    // @ts-ignore
-    setShow(show ? false : true);
-    return ;
 
     writeContract({
       mode: "recklesslyUnprepared",
@@ -50,9 +46,15 @@ const NewResolutionForm = () => {
       })
       .then((tx) => {
         setIsLoading(false);
+        console.log(tx);
+        // @ts-ignore
+        showNotification("Goal created", tx.transactionHash);
         fetchGoals();
       })
-      .catch((error) => setIsLoading(false));
+      .catch((error) => {
+        setIsLoading(false);
+        showError("Error creating goal", error.message);
+      });
   };
 
   const handleFormChange = (event: FormEvent<HTMLInputElement>) => {
@@ -189,7 +191,14 @@ const NewResolutionForm = () => {
                   : "w-full rounded-lg bg-indigo-200 py-3 text-lg font-medium text-white shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:ring-offset-2"
               }
             >
-              {isConnected ? <><span>LFG</span><span className="ml-4">🚀</span></> : "Connect wallet"}
+              {isConnected ? (
+                <>
+                  <span>LFG</span>
+                  <span className="ml-4">🚀</span>
+                </>
+              ) : (
+                "Connect wallet"
+              )}
             </button>
           </div>
         </form>

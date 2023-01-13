@@ -21,7 +21,7 @@ const Goals = () => {
     return goal.depositor === address || goal.arbiter === address || goal.beneficiary === address;
   });
 
-  const formatAddress = (_address: `0x${string}`, half = undefined) => {
+  const formatAddress = (_address: `0x${string}`, half:undefined | "first" | "second" = undefined) => {
     return (
       <span className={_address === address ? "bg-yellow-50 p-1 text-yellow-700" : ""}>
         {truncateEthAddress(_address, half)}

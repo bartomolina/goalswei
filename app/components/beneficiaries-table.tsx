@@ -35,7 +35,7 @@ const BeneficiariesTable = () => {
                     />
                   </div>
                   <div className="ml-6">
-                    <div className="text-gray-500">{truncateEthAddress(beneficiary.addr)}</div>
+                    <div className="font-mono text-gray-800">{truncateEthAddress(beneficiary.addr)}</div>
                   </div>
                 </div>
               </td>

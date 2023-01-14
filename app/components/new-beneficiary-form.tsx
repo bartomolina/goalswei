@@ -89,7 +89,7 @@ const NewBeneficairyForm = () => {
               id="addr"
               value={formData.addr}
               onChange={handleFormChange}
-              className="text-xl block w-full border-0 p-0 text-gray-700 placeholder-gray-300 focus:ring-0"
+              className="block w-full border-0 p-0 font-mono text-gray-500 placeholder-gray-200 focus:ring-0"
               placeholder="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
             />
           </div>

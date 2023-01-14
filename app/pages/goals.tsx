@@ -111,13 +111,13 @@ const Goals = () => {
                             src={makeBlockie(goal.depositor)}
                             alt={goal.depositor}
                           />
-                          <p className="text-xs text-center mt-1 -ml-1 text-gray-400">
+                          <p className="text-xs text-center mt-1 -ml-2 font-mono text-gray-400">
                             {formatAddress(goal.depositor, "first")}
                           </p>
                         </div>
                         <div className="ml-6">
                           <div className="font-semibold text-xl text-gray-800">{goal.goal}</div>
-                          <div className="text-gray-400 text-xs">{formatAddress(goal.addr)}</div>
+                          <div className="font-mono text-gray-400 text-xs">{formatAddress(goal.addr)}</div>
                         </div>
                       </div>
                     </td>
@@ -125,10 +125,10 @@ const Goals = () => {
                       <div className="text-gray-600">{`${ethers.utils.formatEther(goal.value)} Ξ`}</div>
                     </td>
                     <td className="px-3 py-4 text-sm text-gray-500">
-                      <div className="text-gray-900">{formatAddress(goal.arbiter)}</div>
+                      <div className="font-mono text-gray-800">{formatAddress(goal.arbiter)}</div>
                     </td>
                     <td className="px-3 py-4 text-sm text-gray-500">
-                      <div className="text-gray-900">{formatAddress(goal.beneficiary)}</div>
+                      <div className="font-mono text-gray-800">{formatAddress(goal.beneficiary)}</div>
                     </td>
                     <td className="px-3 py-4 text-sm text-gray-500">
                       <GoalStatus goal={goal} />

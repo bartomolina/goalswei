@@ -18,10 +18,10 @@ const NewResolutionForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { fetchGoals } = useGoals();
   const [formData, setFormData] = useState({
-    goal: "Test",
-    arbiter: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-    beneficiary: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
-    depositAmount: ethers.utils.parseEther("0.01"),
+    goal: "",
+    arbiter: "",
+    beneficiary: "",
+    depositAmount: ethers.utils.parseEther("0.0001"),
     dueDate: tomorrow.getTime(),
   });
   const { isConnected } = useAccount();
@@ -138,24 +138,7 @@ const NewResolutionForm = () => {
               placeholder="PLW3.eth"
             />
           </div>
-          <div className="relative rounded-md border border-gray-300 p-3 shadow-sm focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
-            <label
-              htmlFor="beneficiary"
-              className="absolute -top-2 left-2 -mt-px inline-block bg-white px-1 text-xs text-gray-800"
-            >
-              Beneficiary address / ENS
-            </label>
-            <input
-              type="text"
-              name="beneficiary"
-              id="beneficiary"
-              value={formData.beneficiary}
-              onChange={handleFormChange}
-              className="text-sm block w-full border-0 p-0 font-mono text-gray-600 placeholder-gray-200 focus:ring-0"
-              placeholder="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
-            />
-          </div>
-          <BeneficiariesDropdown />
+          <BeneficiariesDropdown formData={formData} setFormData={setFormData} />
           <div className="grid grid-cols-2 gap-3">
             <div className="relative rounded-md border border-gray-300 p-3 shadow-sm focus-within:border-indigo-600 focus-within:ring-1 focus-within:ring-indigo-600">
               <label
@@ -186,10 +169,10 @@ const NewResolutionForm = () => {
                 name="depositAmount"
                 id="depositAmount"
                 value={ethers.utils.formatEther(formData.depositAmount)}
-                step="0.01"
+                step="0.0001"
                 onChange={handleETHChange}
                 className="text-xl block w-full border-0 p-0 text-gray-700 placeholder-gray-300 focus:ring-0"
-                placeholder="0.01"
+                placeholder="0.0001"
               />
             </div>
           </div>

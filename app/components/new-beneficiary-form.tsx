@@ -14,8 +14,8 @@ const NewBeneficairyForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { fetchGoals } = useGoals();
   const [formData, setFormData] = useState({
-    addr: "0x71bE63f3384f5fb98995898A86B02Fb2426c5788",
-    info: "Cool Project",
+    addr: "",
+    info: "",
   });
   const { isConnected } = useAccount();
 

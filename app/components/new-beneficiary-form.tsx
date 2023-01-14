@@ -3,19 +3,28 @@ import { useAccount } from "wagmi";
 import { writeContract, waitForTransaction } from "@wagmi/core";
 import EscrowFactoryJSON from "../lib/escrow-factory-contract.json";
 import { useGoals } from "../components/goals-context";
+import { useNotifications } from "./notifications-context";
 
 const tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
 
 const NewBeneficairyForm = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
+  const { showNotification, showError } = useNotifications();
+  const [isLoading, setIsLoading] = useState(false);
   const { fetchGoals } = useGoals();
   const [formData, setFormData] = useState({
     addr: "0x71bE63f3384f5fb98995898A86B02Fb2426c5788",
     info: "Cool Project",
   });
   const { isConnected } = useAccount();
+
+  const clearForm = () => {
+    setFormData({
+      addr: "",
+      info: "",
+    });
+  };
 
   const handleSubmit = (event: FormEvent) => {
     setIsLoading(true);
@@ -36,8 +45,14 @@ const NewBeneficairyForm = () => {
       .then((tx) => {
         setIsLoading(false);
         fetchGoals();
+        clearForm();
+        // @ts-ignore
+        showNotification("Beneficiary added", tx.transactionHash);
       })
-      .catch((error) => setIsLoading(false));
+      .catch((error) => {
+        setIsLoading(false);
+        showError("Error adding beneficiary", error.message);
+      });
   };
 
   const handleFormChange = (event: FormEvent<HTMLInputElement>) => {

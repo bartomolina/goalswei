@@ -37,7 +37,7 @@ const Nav = () => {
               </div>
               {/* Right menu items */}
               <div className="hidden sm:ml-6 sm:flex sm:items-center">
-                <ConnectKitButton />
+                <ConnectKitButton showBalance={true} />
               </div>
               {/* Mobile menu button */}
               <div className="flex items-center sm:hidden">

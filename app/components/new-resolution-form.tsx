@@ -25,6 +25,16 @@ const NewResolutionForm = () => {
   });
   const { isConnected } = useAccount();
 
+  const clearForm = () => {
+    setFormData({
+      goal: "",
+      arbiter: "",
+      beneficiary: "",
+      depositAmount: ethers.utils.parseEther("0.01"),
+      dueDate: tomorrow.getTime(),
+    });
+  };
+
   const handleSubmit = (event: FormEvent) => {
     setIsLoading(true);
     event.preventDefault();
@@ -46,10 +56,10 @@ const NewResolutionForm = () => {
       })
       .then((tx) => {
         setIsLoading(false);
-        console.log(tx);
+        fetchGoals();
+        clearForm();
         // @ts-ignore
         showNotification("Goal created", tx.transactionHash);
-        fetchGoals();
       })
       .catch((error) => {
         setIsLoading(false);

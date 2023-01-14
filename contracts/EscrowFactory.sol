@@ -78,13 +78,18 @@ contract EscrowFactory is Ownable {
     event BeneficiaryAdded(address indexed beneficiary, string info);
 
     function addBeneficiary(address _address, string calldata info) external {
-        allowedBeneficiaries[_address] = true;
-        beneficiariesList.push(BeneficiaryStruct(_address, info));
-
-        emit BeneficiaryAdded(msg.sender, info);
+        if (!allowedBeneficiaries[_address]) {
+            allowedBeneficiaries[_address] = true;
+            beneficiariesList.push(BeneficiaryStruct(_address, info));
+            emit BeneficiaryAdded(msg.sender, info);
+        }
     }
 
-    function getBeneficiaries() external view returns (BeneficiaryStruct[] memory) {
+    function getBeneficiaries()
+        external
+        view
+        returns (BeneficiaryStruct[] memory)
+    {
         return beneficiariesList;
     }
 }

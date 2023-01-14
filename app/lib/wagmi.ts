@@ -6,7 +6,7 @@ const client = createClient(
   getDefaultClient({
     appName: "WAGMI",
     alchemyId:  process.env.NEXT_PUBLIC_ALCHEMY_API,
-    chains: [mainnet, goerli, hardhat],
+    chains: [hardhat],
   })
 );
 

@@ -1,9 +1,10 @@
 import { createContext, useContext, useState } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useSwitchNetwork } from "wagmi";
 import { readContract } from "@wagmi/core";
 import EscrowFactoryJSON from "../lib/escrow-factory-contract.json";
 import EscrowJSON from "../lib/escrow-contract.json";
 import { IGoal } from "../global";
+import { useNotifications } from "./notifications-context";
 
 const GoalsContext = createContext({
   goals: [],
@@ -14,6 +15,7 @@ const GoalsContext = createContext({
 export const useGoals = () => useContext(GoalsContext);
 
 export const GoalsProvider = ({ children }: React.PropsWithChildren) => {
+  const { showError } = useNotifications();
   const [goals, setGoals] = useState([] as any);
   const [beneficiaries, setBeneficiaries] = useState([] as any);
 
@@ -24,10 +26,14 @@ export const GoalsProvider = ({ children }: React.PropsWithChildren) => {
       address: EscrowFactoryJSON.address,
       abi: EscrowFactoryJSON.abi as any,
       functionName: "getBeneficiaries",
-    }).then((beneficiaries: any) => {
-      setBeneficiaries(beneficiaries);
-      console.log("Beneficiaries: ", beneficiaries);
-    });
+    })
+      .then((beneficiaries: any) => {
+        setBeneficiaries(beneficiaries);
+        console.log("Beneficiaries: ", beneficiaries);
+      })
+      .catch((error) => {
+        showError("Error loading beneficiaries", error.message);
+      });
 
     readContract({
       address: EscrowFactoryJSON.address,
@@ -60,6 +66,9 @@ export const GoalsProvider = ({ children }: React.PropsWithChildren) => {
         _goals.forEach((goal, i) => (goal.status = data[i]));
         setGoals(_goals);
         console.log("Goals: ", _goals);
+      })
+      .catch((error) => {
+        showError("Error loading goals", error.message);
       });
   };
 

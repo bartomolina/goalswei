@@ -11,8 +11,10 @@ import GoalStatus from "../components/goal-status";
 import { truncateEthAddress, getTimeRemaining } from "../lib/utils";
 import makeBlockie from "ethereum-blockies-base64";
 import EscrowJSON from "../lib/escrow-contract.json";
+import { useNotifications } from "../components/notifications-context";
 
 const Goals = () => {
+  const { showNotification, showError } = useNotifications();
   const [isLoading, setIsLoading] = useState(false);
   const { goals } = useGoals();
   const { address } = useAccount();
@@ -38,6 +40,9 @@ const Goals = () => {
     setIsLoading(true);
     event.preventDefault();
 
+    const notificationMsg = action === "approve" ? "approved" : "rejected";
+    const errorMsg = action === "approve" ? "approving" : "rejecting";
+
     writeContract({
       mode: "recklesslyUnprepared",
       address: _address,
@@ -52,8 +57,13 @@ const Goals = () => {
       .then((tx) => {
         setIsLoading(false);
         fetchGoals();
+        // @ts-ignore
+        showNotification(`Goal ${notificationMsg}`, tx.transactionHash);
       })
-      .catch((error) => setIsLoading(false));
+      .catch((error) => {
+        setIsLoading(false);
+        showError(`Error ${errorMsg} goal`, error.message);
+      });
   };
 
   return (

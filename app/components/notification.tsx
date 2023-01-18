@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { Transition } from "@headlessui/react";
-import { CheckCircleIcon, LinkIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { XMarkIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import { useNotifications } from "./notifications-context";
 
@@ -48,7 +48,6 @@ const Notification = () => {
                           className="hover:underline"
                         >
                           View transaction
-                          <LinkIcon className="inline ml-0.5 h-1.5 w-1.5 align-top" aria-hidden="true" />
                         </a>
                       )}
                     </p>

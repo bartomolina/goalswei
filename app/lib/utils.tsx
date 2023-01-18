@@ -1,7 +1,7 @@
 enum GoalStatusEnum {
   Pending,
   Approved,
-  Rejected
+  Rejected,
 }
 
 const truncateRegex = /^(0x[a-zA-Z0-9]{4})[a-zA-Z0-9]+([a-zA-Z0-9]{4})$/;
@@ -37,4 +37,14 @@ const getTimeRemaining = (timestamp: number) => {
   return "";
 };
 
-export { truncateEthAddress, getTimeRemaining, GoalStatusEnum };
+function isValidHttpUrl(_url: string) {
+  let url;
+  try {
+    url = new URL(_url);
+  } catch (err) {
+    return false;
+  }
+  return url.protocol === "http:" || url.protocol === "https:";
+}
+
+export { truncateEthAddress, getTimeRemaining, isValidHttpUrl, GoalStatusEnum };

@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useGoals } from "../components/goals-context";
 import { truncateEthAddress } from "../lib/utils";
 import makeBlockie from "ethereum-blockies-base64";
+import { isValidHttpUrl } from "../lib/utils";
 
 const BeneficiariesTable = () => {
   const { beneficiaries } = useGoals();
@@ -40,7 +41,15 @@ const BeneficiariesTable = () => {
                 </div>
               </td>
               <td className="px-3 py-4 text-sm text-gray-500">
-                <div className="text-gray-600">{beneficiary.info}</div>
+                <div className="text-gray-600">
+                  {isValidHttpUrl(beneficiary.info) ? (
+                    <a href={beneficiary.info} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                      {beneficiary.info}
+                    </a>
+                  ) : (
+                    beneficiary.info
+                  )}
+                </div>
               </td>
             </tr>
           ))}

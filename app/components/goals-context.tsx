@@ -1,7 +1,8 @@
 import { createContext, useContext, useState } from "react";
 import { useAccount, useSwitchNetwork } from "wagmi";
 import { readContract } from "@wagmi/core";
-import EscrowFactoryJSON from "../lib/escrow-factory-contract.json";
+import GoerliEscrowFactoryJSON from "../lib/goerli-escrow-factory-contract.json";
+import LocalEscrowFactoryJSON from "../lib/localhost-escrow-factory-contract.json";
 import EscrowJSON from "../lib/escrow-contract.json";
 import { IGoal } from "../global";
 import { useNotifications } from "./notifications-context";
@@ -19,6 +20,11 @@ export const GoalsProvider = ({ children }: React.PropsWithChildren) => {
   const [goals, setGoals] = useState([] as any);
   const [beneficiaries, setBeneficiaries] = useState([] as any);
 
+  let EscrowFactoryJSON = LocalEscrowFactoryJSON;
+  if (process.env.NEXT_PUBLIC_NETWORK?.toLowerCase() == "goerli") {
+    EscrowFactoryJSON = GoerliEscrowFactoryJSON;
+  }
+
   const fetchGoals = () => {
     let _goals: IGoal[] = [];
 
@@ -32,6 +38,7 @@ export const GoalsProvider = ({ children }: React.PropsWithChildren) => {
         console.log("Beneficiaries: ", beneficiaries);
       })
       .catch((error) => {
+        console.log(error);
         showError("Error loading beneficiaries", error.message);
       });
 

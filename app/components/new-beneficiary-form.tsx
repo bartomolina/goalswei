@@ -1,7 +1,8 @@
 import { useEffect, useState, FormEvent } from "react";
 import { useAccount } from "wagmi";
 import { writeContract, waitForTransaction } from "@wagmi/core";
-import EscrowFactoryJSON from "../lib/escrow-factory-contract.json";
+import GoerliEscrowFactoryJSON from "../lib/goerli-escrow-factory-contract.json";
+import LocalEscrowFactoryJSON from "../lib/localhost-escrow-factory-contract.json";
 import { useGoals } from "../components/goals-context";
 import { useNotifications } from "./notifications-context";
 
@@ -18,6 +19,11 @@ const NewBeneficairyForm = () => {
     info: "",
   });
   const { isConnected } = useAccount();
+
+  let EscrowFactoryJSON = LocalEscrowFactoryJSON;
+  if (process.env.NEXT_PUBLIC_NETWORK?.toLowerCase() == "goerli") {
+    EscrowFactoryJSON = GoerliEscrowFactoryJSON;
+  }
 
   const clearForm = () => {
     setFormData({

@@ -42,7 +42,7 @@ const Notification = () => {
                         <span>{notification.error}</span>
                       ) : (
                         <a
-                          href={`https://etherscan.io/tx/${notification.txId}`}
+                          href={`https://goerli.etherscan.io/tx/${notification.txId}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="hover:underline"

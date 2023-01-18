@@ -4,7 +4,8 @@ import { useAccount } from "wagmi";
 import { writeContract, waitForTransaction } from "@wagmi/core";
 // @ts-ignore
 import DatePicker from "react-datepicker";
-import EscrowFactoryJSON from "../lib/escrow-factory-contract.json";
+import GoerliEscrowFactoryJSON from "../lib/goerli-escrow-factory-contract.json";
+import LocalEscrowFactoryJSON from "../lib/localhost-escrow-factory-contract.json";
 import BeneficiariesDropdown from "./beneficiaries-dropdown";
 import { useGoals } from "../components/goals-context";
 import { useNotifications } from "./notifications-context";
@@ -26,6 +27,11 @@ const NewResolutionForm = () => {
   });
   const { isConnected } = useAccount();
 
+  let EscrowFactoryJSON = LocalEscrowFactoryJSON;
+  if (process.env.NEXT_PUBLIC_NETWORK?.toLowerCase() == "goerli") {
+    EscrowFactoryJSON = GoerliEscrowFactoryJSON;
+  }
+
   const clearForm = () => {
     setFormData({
       goal: "",
@@ -33,7 +39,7 @@ const NewResolutionForm = () => {
       beneficiary: "",
       depositAmount: ethers.utils.parseEther("0.01"),
       dueDate: tomorrow.getTime(),
-    })
+    });
   };
 
   const handleSubmit = (event: FormEvent) => {

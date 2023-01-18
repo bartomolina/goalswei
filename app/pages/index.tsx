@@ -20,7 +20,7 @@ const Home = () => {
   return (
     <>
       <Head>
-        <title>WAGMI - Home</title>
+        <title>GoalsWei - Home</title>
         <meta name="description" content="WAGMI" />
       </Head>
       <div className="bg-gray-100">

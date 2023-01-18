@@ -69,7 +69,7 @@ const Goals = () => {
   return (
     <>
       <Head>
-        <title>WAGMI - Goals</title>
+        <title>GoalsWei - Goals</title>
         <meta name="description" content="WAGMI - Goals" />
       </Head>
       <div className="bg-gray-100 pb-24">

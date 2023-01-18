@@ -6,7 +6,7 @@ const Beneficiaries = () => {
   return (
     <>
       <Head>
-        <title>WAGMI - Beneficiaries</title>
+        <title>GoalsWei - Beneficiaries</title>
         <meta name="description" content="WAGMI - Beneficiaries" />
       </Head>
       <div className="bg-gray-100 pb-24">

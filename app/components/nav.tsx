@@ -17,9 +17,13 @@ const Nav = () => {
     <Disclosure as="nav" className="bg- hite">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-5xl py-6 px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-6xl py-6 px-4 sm:px-6 lg:px-8">
             <div className="flex h-9 justify-between">
               <div className="flex">
+                {/* Home */}
+                <div className="text-2xl mr-5 font-semibold lg:mr-11 md:inline hidden">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">GoalsWei.io</span>
+                </div>
                 {/* Menu items */}
                 <div className="hidden sm:flex sm:space-x-11">
                   {navigation.map((item) => (

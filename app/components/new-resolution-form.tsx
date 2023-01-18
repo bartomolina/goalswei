@@ -37,7 +37,7 @@ const NewResolutionForm = () => {
       goal: "",
       arbiter: "",
       beneficiary: "",
-      depositAmount: ethers.utils.parseEther("0.01"),
+      depositAmount: ethers.utils.parseEther("0.0001"),
       dueDate: tomorrow.getTime(),
     });
   };

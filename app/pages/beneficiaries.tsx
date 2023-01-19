@@ -7,7 +7,7 @@ const Beneficiaries = () => {
     <>
       <Head>
         <title>GoalsWei - Beneficiaries</title>
-        <meta name="description" content="WAGMI - Beneficiaries" />
+        <meta name="description" content="GoalsWei - Beneficiaries" />
       </Head>
       <div className="bg-gray-100 pb-24">
         <div className="mx-auto max-w-6xl sm:px-6 lg:px-8 py-8">

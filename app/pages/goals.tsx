@@ -70,7 +70,7 @@ const Goals = () => {
     <>
       <Head>
         <title>GoalsWei - Goals</title>
-        <meta name="description" content="WAGMI - Goals" />
+        <meta name="description" content="GoalsWei - Yout goals" />
       </Head>
       <div className="bg-gray-100 pb-24">
         <div className="mx-auto max-w-6xl sm:px-6 lg:px-8 py-8">

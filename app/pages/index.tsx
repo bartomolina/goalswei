@@ -21,7 +21,7 @@ const Home = () => {
     <>
       <Head>
         <title>GoalsWei - Home</title>
-        <meta name="description" content="WAGMI" />
+        <meta name="description" content="GoalsWei - New goal" />
       </Head>
       <div className="bg-gray-100">
         <div className="mx-auto max-w-6xl sm:px-6 lg:px-8">

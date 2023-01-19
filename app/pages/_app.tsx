@@ -3,8 +3,8 @@ import "../styles/react-datepicker.css";
 import Head from "next/head";
 import type { AppProps } from "next/app";
 import { WagmiConfig } from "wagmi";
-import client from "../lib/wagmi";
 import { ConnectKitProvider } from "connectkit";
+import client from "../lib/wagmi";
 
 import { GoalsProvider } from "../components/goals-context";
 import { NotificationsProvider } from "../components/notifications-context";

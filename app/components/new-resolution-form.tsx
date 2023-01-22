@@ -17,6 +17,7 @@ const NewResolutionForm = () => {
   const [hasMounted, setHasMounted] = useState(false);
   const { showNotification, showError } = useNotifications();
   const [isLoading, setIsLoading] = useState(false);
+  const [isWaitingTx, setIsWaitingTx] = useState(false);
   const { fetchGoals } = useGoals();
   const [formData, setFormData] = useState({
     goal: "",
@@ -59,10 +60,12 @@ const NewResolutionForm = () => {
     })
       // @ts-ignore
       .then((hash, wait) => {
+        setIsWaitingTx(true);
         return waitForTransaction(hash);
       })
       .then((tx) => {
         setIsLoading(false);
+        setIsWaitingTx(false);
         fetchGoals();
         clearForm();
         // @ts-ignore
@@ -193,10 +196,16 @@ const NewResolutionForm = () => {
               }
             >
               {isConnected ? (
-                <>
-                  <span>LFG</span>
-                  <span className="ml-4">🚀</span>
-                </>
+                isWaitingTx ? (
+                  <>
+                    <span>Transaction processing...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>LFG</span>
+                    <span className="ml-4">🚀</span>
+                  </>
+                )
               ) : (
                 "Connect wallet"
               )}

@@ -19,13 +19,13 @@ const Nav = () => {
         <>
           <div className="mx-auto max-w-6xl py-6 px-4 sm:px-6 lg:px-8">
             <div className="flex h-9 justify-between">
-              <div className="flex">
+              <div className="hidden sm:flex">
                 {/* Home */}
-                <div className="text-2xl mr-5 font-semibold lg:mr-11 md:inline hidden">
+                <div className="text-2xl mr-5 font-semibold lg:mr-11 lg:inline hidden">
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">GoalsWei.io</span>
                 </div>
                 {/* Menu items */}
-                <div className="hidden sm:flex sm:space-x-11">
+                <div className="hidden sm:flex md:space-x-11 sm:space-x-5">
                   {navigation.map((item) => (
                     <ActiveLink
                       key={item.href}
@@ -40,7 +40,7 @@ const Nav = () => {
                 </div>
               </div>
               {/* Right menu items */}
-              <div className="hidden sm:ml-6 sm:flex sm:items-center">
+              <div className="sm:ml-6 sm:items-center">
                 <ConnectKitButton showBalance={true} />
               </div>
               {/* Mobile menu button */}

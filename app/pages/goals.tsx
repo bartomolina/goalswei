@@ -23,7 +23,7 @@ const Goals = () => {
     return goal.depositor === address || goal.arbiter === address || goal.beneficiary === address;
   });
 
-  const formatAddress = (_address: `0x${string}`, half:undefined | "first" | "second" = undefined) => {
+  const formatAddress = (_address: `0x${string}`, half: undefined | "first" | "second" = undefined) => {
     return (
       <span className={_address === address ? "bg-yellow-50 p-1 text-yellow-700" : ""}>
         {truncateEthAddress(_address, half)}
@@ -122,7 +122,16 @@ const Goals = () => {
                       </div>
                     </td>
                     <td className="px-3 py-4 text-xl text-gray-500">
-                      <div className="text-gray-600">{`${ethers.utils.formatEther(goal.value)} Ξ`}</div>
+                      <div className="text-gray-600 space-x-1">
+                        <span>{ethers.utils.formatEther(goal.value)}</span>
+                        <Image
+                          src="/eth-diamond-black.png"
+                          alt="ETH"
+                          width={9}
+                          height={15}
+                          className="inline align-baseline opacity-80"
+                        />
+                      </div>
                     </td>
                     <td className="px-3 py-4 text-sm text-gray-500">
                       <div className="font-mono text-gray-800">{formatAddress(goal.arbiter)}</div>

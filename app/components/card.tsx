@@ -13,13 +13,24 @@ const Card = ({ goal }: Props) => (
   <div className="bg-white divide-y w-full">
     <div className="flex pt-5 px-5 mb-3">
       <div className="flex-none">
-        <Image width={14} height={14} className="h-14 w-14 rounded-xl" src={makeBlockie(goal.depositor)} alt={goal.depositor} />
-        <p className="text-xs text-center mt-1 -ml-1 font-mono text-gray-400">{truncateEthAddress(goal.depositor, "first")}</p>
+        <Image
+          width={14}
+          height={14}
+          className="h-14 w-14 rounded-xl"
+          src={makeBlockie(goal.depositor)}
+          alt={goal.depositor}
+        />
+        <p className="text-xs text-center mt-1 -ml-1 font-mono text-gray-400">
+          {truncateEthAddress(goal.depositor, "first")}
+        </p>
       </div>
       <div className="ml-4 content-between grid w-full">
         <p className="text-lg font-semibold text-gray-800 leading-5">{goal.goal}</p>
         <div className="flex justify-between items-center text-lg text-gray-600 mt-2">
-          <div>{`${ethers.utils.formatEther(goal.value)} Ξ`}</div>
+          <div className="space-x-1">
+            <span>{ethers.utils.formatEther(goal.value)}</span>
+            <Image src="/eth-diamond-black.png" alt="ETH" width={9} height={15} className="inline align-baseline opacity-80" />
+          </div>
           <GoalStatus goal={goal} />
         </div>
       </div>

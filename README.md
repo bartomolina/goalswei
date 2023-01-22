@@ -1,3 +1,5 @@
+![GoalsWei.io](https://www.goalswei.io/Screenshot.png "GoalsWei.io")
+
 # About the project
 
 [GoalsWei.io](https://www.goalswei.io/) is a goals tracker where users can allocate an amount of Ether to their goals and set a deadline. Once the deadline is reached, an arbiter will determine if the goal has been achieved, and will either send the locked Ether back to the user who created the goal if the goal has been achieved, or send it to a beneficiary if the goal was not achieved. The DApp is based on a web interface built with [Next.js](https://nextjs.org/) and [Tailwind CSS](https://tailwindcss.com/) and a backed based on smart contracts deployed to the Goerli testnet.
